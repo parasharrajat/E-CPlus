@@ -1,0 +1,16 @@
+{
+  "name": "ExpensiContributor",
+  "version": "0.0.1",
+  "description": "--",
+  "scripts": {
+    "dev": "webextension-toolbox dev",
+    "build": "webextension-toolbox build"
+  },
+  "devDependencies": {
+    "webextension-toolbox": "latest"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
