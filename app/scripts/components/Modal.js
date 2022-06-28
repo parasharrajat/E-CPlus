@@ -4,6 +4,8 @@ import React, {Component} from 'react'
 class Modal extends Component {
     render() {
         return (
+            <>
+            {this.props.isVisible && <div className='bg-overlay'></div>}
             <details-dialog class={`Box Box--overlay d-flex flex-column anim-fade-in fast Box-overlay--wide overflow-visible ${this.props.isVisible ? 'd-flex': 'd-none'}`} role="dialog" aria-modal="true">
                 <div className="Box-header">
                     <button className="Box-btn-octicon btn-octicon float-right" type="button" aria-label="Close dialog" data-close-dialog="" onClick={this.props.onClose}>
@@ -15,6 +17,7 @@ class Modal extends Component {
                     {this.props.children}
                 </div>
             </details-dialog>
+            </>
         );
     }
 }

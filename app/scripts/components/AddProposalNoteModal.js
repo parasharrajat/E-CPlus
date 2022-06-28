@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import {addProposalNote} from "../actions/issue";
+import {parseCommentURL} from "../actions/common";
 import Button from "./Button";
 import Modal from "./Modal";
 
@@ -6,7 +8,8 @@ export default class AddProposalNoteModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isVisible: false,
+            note: '',
+            error: '',
         };
         this.saveNote = this.saveNote.bind(this);
         this.clearError = this.clearError.bind(this);
@@ -15,6 +18,7 @@ export default class AddProposalNoteModal extends Component {
 
     saveNote(e) {
         this.setState({note: e.target.value});
+        this.clearError();
     }
 
     clearError() {
@@ -28,18 +32,14 @@ export default class AddProposalNoteModal extends Component {
             return;
         }
         this.clearError();
+        const {issueID, commentID} = parseCommentURL(this.props.proposalLink);
+        addProposalNote(commentID, issueID, this.props.proposalLink, this.state.note);
+        this.props.onCancel();
     }
-
-    componentDidUpdate(prevProps){
-        if(!prevProps.isVisible && this.props.isVisible){
-            this.setState({isVisible: true});
-        }
-    }
-
 
     render() {
         return (
-            <Modal title={'Add Note for Proposal'} isVisible={this.state.isVisible} onClose={() => this.setState({isVisible: false})}>
+            <Modal title={'Add Note for Proposal'} isVisible={this.props.isVisible} onClose={this.props.onCancel}>
                 {this.state.error &&
                     <p className="flash p-2">
                         {this.state.error}
@@ -55,8 +55,7 @@ export default class AddProposalNoteModal extends Component {
                         <dd><textarea name="note-text" className="form-control js-paste-markdown" onChange={this.saveNote}></textarea></dd>
                     </dl>
                     <div className="d-flex d-sm-block">
-                        <button data-disable-with="Saving note..." data-disable-invalid="" type="submit" data-view-component="true" className="btn-primary btn">  Save Note
-                        </button>
+                        <button type="submit" data-view-component="true" className="btn-primary btn"> Save Note</button>
                     </div>
                 </form>
             </Modal>

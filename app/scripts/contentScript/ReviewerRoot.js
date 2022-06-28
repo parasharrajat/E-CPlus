@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom';
 import Actions from '../components/Actions';
 import AddProposalNoteModal from '../components/AddProposalNoteModal';
 import InjectedCardLayout from '../components/InjectedCardLayout';
-import Tabs from '../components/Tabs';
+import '../../styles/contentscript.css';
+import {markProposalReviewed as markProposalReviewedAction} from '../actions/issue';
+import {parseCommentURL} from '../actions/common';
 
 class ReviewerRoot extends Component {
     constructor(props) {
@@ -19,6 +21,7 @@ class ReviewerRoot extends Component {
         };
         this.proposalCommentsTagged = [];
         this.addNoteforProposal = this.addNoteforProposal.bind(this);
+        this.markProposalReviewed = this.markProposalReviewed.bind(this);
         this.tabs = [
             {
                 id: 1,
@@ -49,7 +52,8 @@ class ReviewerRoot extends Component {
                     actions: [
                         {
                             id: 1,
-                            title: 'Mark Reviewed'
+                            title: 'Mark Reviewed',
+                            onClick: this.markProposalReviewed,
                         }
                     ],
                 }
@@ -75,6 +79,12 @@ class ReviewerRoot extends Component {
                 link: timeNode.href
             }
         })
+    }
+
+    markProposalReviewed(e) {
+        const issueNode = e.target.closest('[id^=issuecomment-]');
+        const timeNode = issueNode.querySelector('.timeline-comment-header-text .js-timestamp');
+        markProposalReviewedAction(parseCommentURL(timeNode.href).commentID);
     }
 
     observeProposalComments() {
@@ -153,6 +163,7 @@ class ReviewerRoot extends Component {
                 <AddProposalNoteModal
                     proposalLink={this.state.addProposalNote.link}
                     isVisible={this.state.addProposalNote.isVisible}
+                    onCancel={() => this.setState({ addProposalNote: {isVisible: false, link: ''}})}
                 />
                 <InjectedCardLayout tabs={this.tabs}>
                     <div className="p-2">

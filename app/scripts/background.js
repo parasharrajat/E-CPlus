@@ -7,17 +7,14 @@ function setup() {
 
 function saveLocalData(key, newData) {
   const fileData = JSON.parse(localStorage.getItem('mainFile'));
-  if (!fileData[key]) {
-    return;
-  }
-  const rowData = fileData[key];
+  // if (!fileData[key]) {
+  //   return;
+  // }
+  const rowData = { ...(fileData[key] || {}), ...newData};
 
   localStorage.setItem('mainFile', JSON.stringify({
     ...fileData,
-    [key]: [
-      ...rowData,
-      ...newData,
-    ]
+    [key]: rowData
   }));
 }
 
