@@ -1,17 +1,23 @@
 import React, {Component} from 'react'
-import {Button} from './Button';
+import Button from './Button';
+import Dropdown from './Dropdown';
 
 class Actions extends Component {
+    getAction(action) {
+        switch (action.type) {
+            case 'button':
+                return <Button {...action.props} />;
+            case 'tabs':
+                return <Tabs {...action.props} />;
+            case 'dropdown':
+                return <Dropdown {...action.props} />;
+        }
+    }
     render() {
         return (
-            <div className="table-list-header-toggle states flex-auto pl-0">
+            <div className="flex-items-center flex-auto d-flex">
                 {this.props.actions.map((action, index) => {
-                    switch (t.type) {
-                        case 'button':
-                            return <Button key={'action' + index} {...action.props} />;
-                        case 'tabs':
-                            return <Tabs key={'action' + index} {...action.props} />;
-                    }
+                    return (<div className='ml-2' key={'action' + index}>{this.getAction(action)}</div>);
                 })}
             </div>);
     }

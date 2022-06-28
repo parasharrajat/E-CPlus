@@ -1,6 +1,8 @@
 import {BookIcon, ChecklistIcon, EyeIcon, FileAddedIcon} from '@primer/octicons-react';
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
+import Actions from '../components/Actions';
+import AddProposalNoteModal from '../components/AddProposalNoteModal';
 import InjectedCardLayout from '../components/InjectedCardLayout';
 import Tabs from '../components/Tabs';
 
@@ -10,13 +12,18 @@ class ReviewerRoot extends Component {
 
         this.state = {
             options: {},
+            addProposalNote: {
+                isVisible: false,
+                link: ''
+            },
         };
         this.proposalCommentsTagged = [];
+        this.addNoteforProposal = this.addNoteforProposal.bind(this);
         this.tabs = [
             {
                 id: 1,
                 title: 'Notes',
-                icon: BookIcon
+                icon: BookIcon,
             },
             {
                 id: 2,
@@ -24,29 +31,50 @@ class ReviewerRoot extends Component {
                 icon: ChecklistIcon,
             },
         ];
-        this.proposalTabs = [
+        this.proposalActions = [
             {
                 id: 1,
-                title: 'Add Note',
-                icon: FileAddedIcon
+                type: 'button',
+                props: {
+                    title: 'Add Note',
+                    icon: FileAddedIcon,
+                    onClick: this.addNoteforProposal,
+                }
             },
             {
                 id: 2,
-                title: 'Reviewed',
-                icon: EyeIcon,
-                isButton: true
+                type: 'dropdown',
+                props: {
+                    buttonTitle: 'More',
+                    actions: [
+                        {
+                            id: 1,
+                            title: 'Mark Reviewed'
+                        }
+                    ],
+                }
             }
-        ]
+        ];
     }
 
     componentDidMount() {
-        try{
-
+        try {
             this.findProposalCommentsAndFeatures(document.querySelectorAll('.js-discussion [id^=issuecomment-]'));
             this.observeProposalComments();
-        } catch(e){
+        } catch (e) {
             console.error(e);
         }
+    }
+
+    addNoteforProposal(e) {
+        const issueNode = e.target.closest('[id^=issuecomment-]');
+        const timeNode = issueNode.querySelector('.timeline-comment-header-text .js-timestamp');
+        this.setState({
+            addProposalNote: {
+                isVisible: true,
+                link: timeNode.href
+            }
+        })
     }
 
     observeProposalComments() {
@@ -56,13 +84,13 @@ class ReviewerRoot extends Component {
         const callback = function (mutationList, observer) {
             for (const mutation of mutationList) {
                 if (mutation.type === 'childList') {
-                    if(mutation.addedNodes.length){
+                    if (mutation.addedNodes.length) {
                         this.findProposalCommentsAndFeatures(mutation.addedNodes);
                     }
-                    if(mutation.removedNodes.length){
+                    if (mutation.removedNodes.length) {
                         mutation.removedNodes.forEach(node => {
                             const index = this.proposalCommentsTagged.indexOf(node.id);
-                            if(index !== -1){
+                            if (index !== -1) {
                                 this.proposalCommentsTagged.splice(index, 1);
                             }
                         });
@@ -78,30 +106,30 @@ class ReviewerRoot extends Component {
         this.observer.observe(targetNode, config)
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.observer.disconnect();
     }
 
-    findProposalCommentsAndFeatures(nodes){
+    findProposalCommentsAndFeatures(nodes) {
         Array.from(nodes)
-        .filter(node => node.id?.includes('issuecomment-') && !this.proposalCommentsTagged.includes(node.id))
-        .filter(node => {
-            const contentNode = node.querySelector('.edit-comment-hide');
-            if(contentNode){
-               return contentNode.textContent.trim().match(/^proposal/ig);
-            }
-        })
-        .forEach((node) => {
-            const actions = node.querySelector('.timeline-comment-header .timeline-comment-actions');
-            if(actions){
-                const container = document.createElement('div');
-                container.id= "expensiContributor-proposalActions";
-                container.setAttribute('class', "mr-2");
-                actions.prepend(container);
-                ReactDOM.render(<Tabs tabs={this.tabs} onSelect={() => {}}/>, container);
-                this.proposalCommentsTagged.push(node.id);
-            }
-        });
+            .filter(node => node.id?.includes('issuecomment-') && !this.proposalCommentsTagged.includes(node.id))
+            .filter(node => {
+                const contentNode = node.querySelector('.edit-comment-hide');
+                if (contentNode) {
+                    return contentNode.textContent.trim().match(/^proposal/ig);
+                }
+            })
+            .forEach((node) => {
+                const actions = node.querySelector('.timeline-comment-header .timeline-comment-actions');
+                if (actions) {
+                    const container = document.createElement('div');
+                    container.id = "expensiContributor-proposalActions";
+                    container.setAttribute('class', "mr-2");
+                    actions.prepend(container);
+                    ReactDOM.render(<Actions actions={this.proposalActions} />, container);
+                    this.proposalCommentsTagged.push(node.id);
+                }
+            });
     }
 
     saveOptions = (id, value) => {
@@ -121,46 +149,52 @@ class ReviewerRoot extends Component {
 
     render() {
         return (
-            <InjectedCardLayout tabs={this.tabs}>
-                <div className="p-2">
-                    {this.state.error &&
-                        <p className="flash p-2">
-                            {this.state.error}
-                        </p>
-                    }
-                    <form onSubmit={this.submitForm}>
-                        <p className="card-text">Subscribe the issue to track payment</p>
-                        <div className="form-checkbox">
-                            <label>
-                                <input type="checkbox" onChange={(e) => this.saveOptions(1, e.target.checked)} />
-                                Issue Payment
-                            </label>
-                            <p className="note">
-                                This will let you mark different payment statuses.
+            <>
+                <AddProposalNoteModal
+                    proposalLink={this.state.addProposalNote.link}
+                    isVisible={this.state.addProposalNote.isVisible}
+                />
+                <InjectedCardLayout tabs={this.tabs}>
+                    <div className="p-2">
+                        {this.state.error &&
+                            <p className="flash p-2">
+                                {this.state.error}
                             </p>
-                        </div>
-                        <div className="form-checkbox">
-                            <label>
-                                <input type="checkbox" onChange={(e) => this.saveOptions(2, e.target.checked)} />
-                                Issue Timeline
-                            </label>
-                            <p className="note">
-                                This will track issue timeline specific to ExpensiContributor.
-                            </p>
-                        </div>
-                        <div className="form-checkbox">
-                            <label>
-                                <input type="checkbox" onChange={(e) => this.saveOptions(3, e.target.checked)} />
-                                PR status
-                            </label>
-                            <p className="note">
-                                This track the PR related acitivity of the issue.
-                            </p>
-                        </div>
-                        <button type="submit" className="btn btn-primary btn-sm">Subscribe</button>
-                    </form>
-                </div>
-            </InjectedCardLayout>
+                        }
+                        <form onSubmit={this.submitForm}>
+                            <p className="card-text">Subscribe the issue to track payment</p>
+                            <div className="form-checkbox">
+                                <label>
+                                    <input type="checkbox" onChange={(e) => this.saveOptions(1, e.target.checked)} />
+                                    Issue Payment
+                                </label>
+                                <p className="note">
+                                    This will let you mark different payment statuses.
+                                </p>
+                            </div>
+                            <div className="form-checkbox">
+                                <label>
+                                    <input type="checkbox" onChange={(e) => this.saveOptions(2, e.target.checked)} />
+                                    Issue Timeline
+                                </label>
+                                <p className="note">
+                                    This will track issue timeline specific to ExpensiContributor.
+                                </p>
+                            </div>
+                            <div className="form-checkbox">
+                                <label>
+                                    <input type="checkbox" onChange={(e) => this.saveOptions(3, e.target.checked)} />
+                                    PR status
+                                </label>
+                                <p className="note">
+                                    This track the PR related acitivity of the issue.
+                                </p>
+                            </div>
+                            <button type="submit" className="btn btn-primary btn-sm">Subscribe</button>
+                        </form>
+                    </div>
+                </InjectedCardLayout>
+            </>
         );
     }
 }

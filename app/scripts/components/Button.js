@@ -1,19 +1,22 @@
-import {Component} from "react";
-
-export class Button extends Component {
+import React, {Component} from "react";
+export default class Button extends Component {
     render() {
-        const className = [
+        const className = this.props.classes || [
             'btn',
-            this.props.sm && 'btn-sm',
+            (this.props.sm || (!this.props.sm && !this.props.lg)) && 'btn-sm',
             this.props.lg && 'btn-lg',
-            this.props.primary && 'btn-primary',
+            (this.props.primary || (!this.props.primary && !this.props.primary)) && 'btn-primary',
             this.props.secondary && 'btn-secondary',
         ];
         const Icon = this.props.icon;
-         const iconSize = this.props.lg ? 32 : 16;
+        const iconSize = this.props.lg ? 32 : 16;
         return (
-            <button className={className} onClick={this.props.action}>
-                {this.props.icon && <Icon size={iconSize} />}
+            <button className={className.join(' ')} onClick={this.props.onClick}>
+                {Boolean(this.props.icon) &&
+                    <>
+                        <Icon size={iconSize} />
+                        {' '}
+                    </>}
                 {this.props.title}
             </button>
         );
