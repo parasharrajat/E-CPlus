@@ -8,7 +8,6 @@ export function getActiveIssueIDFromURL() {
         return /pull\/\d*\/?$/.exec(window.location)[1];
     default: return null;
     }
-    return null;
 }
 
 export function subscribeToIssue(id, options) {

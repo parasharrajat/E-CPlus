@@ -38,3 +38,19 @@
     transform: translateX(0);
     opacity: 1;
 }
+
+.notespanel-note > li{
+    width: auto;
+}
+.notespanel-note .icon-go{
+    opacity: 0;
+    transform: translateY(-50%) translateX(100%) rotate(180deg);
+    top: 50%;
+    transition: all 0.1s ease-in;
+    position: absolute;
+    right: 0;
+}
+.notespanel-note:hover .icon-go{
+    opacity: 1;
+    transform: translateY(-50%) translateX(0) rotate(0deg);
+}
