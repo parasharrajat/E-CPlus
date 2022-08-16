@@ -7,6 +7,8 @@
 		"build": "webextension-toolbox build"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.18.10",
+		"@babel/preset-env": "^7.18.10",
 		"@babel/preset-react": "^7.18.6",
 		"@types/chai": "^4.2.22",
 		"@types/mocha": "^9.0.0",
@@ -14,6 +16,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.15.0",
 		"@typescript-eslint/parser": "^5.15.0",
 		"@webextension-toolbox/webextension-toolbox": "^5.2.2",
+		"babel-loader": "^8.2.5",
 		"chai": "^4.3.4",
 		"css-loader": "^6.7.1",
 		"dotenv": "^16.0.0",
@@ -26,7 +29,8 @@
 		"ts-mocha": "^9.0.2",
 		"tsconfig-paths-webpack-plugin": "^3.5.2",
 		"typescript": "^4.6.2",
-		"webextension-toolbox": "latest"
+		"webpack": "^5.74.0",
+		"webpack-watched-glob-entries-plugin": "^2.2.4"
 	},
 	"dependencies": {
 		"@primer/octicons-react": "^17.3.0",
