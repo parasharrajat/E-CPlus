@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {
     Text, Box, Header, IconButton, ActionList, Label, CircleBadge,
 } from '@primer/react';
@@ -7,6 +8,9 @@ import {
 } from '@primer/octicons-react';
 import {getProposalComments} from '../actions/issue';
 
+const propTypes = {
+    onClose: PropTypes.func.isRequired,
+};
 export default class NotesPanel extends Component {
     constructor(props) {
         super(props);
@@ -55,3 +59,5 @@ export default class NotesPanel extends Component {
         );
     }
 }
+
+NotesPanel.propTypes = propTypes;

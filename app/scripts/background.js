@@ -38,7 +38,7 @@ function addRow(id, data) {
 }
 
 function clientRequestHandler(request, sender, sendResponse) {
-    console.log('Message from the content script:', request);
+    console.debug('Message from the content script:', request);
     let response = null;
     try {
         switch (request.end) {
@@ -68,6 +68,7 @@ function clientRequestHandler(request, sender, sendResponse) {
 
 function setup() {
     localStorage.setItem('mainFile', JSON.stringify({}));
+    // eslint-disable-next-line no-undef
     browser.runtime.onMessage.addListener(clientRequestHandler);
 }
 
