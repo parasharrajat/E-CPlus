@@ -7,3 +7,34 @@
     left: 0;
     top: 0;
 }
+
+.sidebarRoot-menu{
+    z-index: 100000000000;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.1s ease;
+    right: 0;
+}
+
+.sidebarRoot-nav{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    border-radius: 0;
+}
+
+.sidebarRoot-panel{
+    z-index: 100000000001;
+    position: fixed;
+    top: 0;
+    right: 0;
+    transition: all 0.1s ease-in-out;
+    transform: translateX(100%);
+    opacity: 0;
+}
+.sidebarRoot-panel.visible{
+    transform: translateX(0);
+    opacity: 1;
+}
