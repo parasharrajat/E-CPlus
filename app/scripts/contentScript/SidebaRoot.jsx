@@ -1,97 +1,52 @@
 import {BookIcon, ChecklistIcon, EyeIcon, FileAddedIcon} from '@primer/octicons-react';
 import React, {Component} from 'react'
-import ReactDOM from 'react-dom';
-import Actions from '../components/Actions';
 import AddProposalNoteModal from '../components/AddProposalNoteModal';
-import InjectedCardLayout from '../components/InjectedCardLayout';
 import '../../styles/contentscript.css';
-import {markProposalReviewed as markProposalReviewedAction} from '../actions/issue';
-import {parseCommentURL} from '../actions/common';
+import {hookReactComponentToDom} from '../lib/domHook';
+import ProposalActions from '../components/ProposalActions';
+import {proposalModalRef} from '../lib/proposalNoteModal';
+import {Box, UnderlineNav, Heading, Text} from '@primer/react';
 
-class ReviewerRoot extends Component {
+class SidebarRoot extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             options: {},
-            addProposalNote: {
-                isVisible: false,
-                link: ''
-            },
         };
         this.proposalCommentsTagged = [];
-        this.addNoteforProposal = this.addNoteforProposal.bind(this);
-        this.markProposalReviewed = this.markProposalReviewed.bind(this);
-        this.tabs = [
-            {
-                id: 1,
-                title: 'Notes',
-                icon: BookIcon,
-            },
-            {
-                id: 2,
-                title: 'Checklist',
-                icon: ChecklistIcon,
-            },
-        ];
-        this.proposalActions = [
-            {
-                id: 1,
-                type: 'button',
-                props: {
-                    title: 'Add Note',
-                    icon: FileAddedIcon,
-                    onClick: this.addNoteforProposal,
-                }
-            },
-            {
-                id: 2,
-                type: 'dropdown',
-                props: {
-                    buttonTitle: 'More',
-                    actions: [
-                        {
-                            id: 1,
-                            title: 'Mark Reviewed',
-                            onClick: this.markProposalReviewed,
-                        }
-                    ],
-                }
-            }
-        ];
+        this.findProposalCommentsAndFeatures = this.findProposalCommentsAndFeatures.bind(this);
     }
 
     componentDidMount() {
         try {
             this.findProposalCommentsAndFeatures(document.querySelectorAll('.js-discussion [id^=issuecomment-]'));
             this.observeProposalComments();
+            // Set the correct ref to modal
+            proposalModalRef.current = {
+                show: (commentLink) => {
+                    this.setState({
+                        addProposalNote: {
+                            isVisible: true,
+                            link: commentLink
+                        }
+                    })
+                },
+                hide: () => {
+                    this.setState({addProposalNote: {isVisible: false, link: ''}});
+                },
+            };
+
         } catch (e) {
             console.error(e);
         }
     }
 
-    addNoteforProposal(e) {
-        const issueNode = e.target.closest('[id^=issuecomment-]');
-        const timeNode = issueNode.querySelector('.timeline-comment-header-text .js-timestamp');
-        this.setState({
-            addProposalNote: {
-                isVisible: true,
-                link: timeNode.href
-            }
-        })
-    }
-
-    markProposalReviewed(e) {
-        const issueNode = e.target.closest('[id^=issuecomment-]');
-        const timeNode = issueNode.querySelector('.timeline-comment-header-text .js-timestamp');
-        markProposalReviewedAction(parseCommentURL(timeNode.href).commentID);
-    }
 
     observeProposalComments() {
         // Select the node that will be observed for mutations
         const targetNode = document.querySelector('.js-discussion');
         const config = {attributes: false, childList: true, subtree: true};
-        const callback = function (mutationList, observer) {
+        const callback = (mutationList, observer) => {
             for (const mutation of mutationList) {
                 if (mutation.type === 'childList') {
                     if (mutation.addedNodes.length) {
@@ -132,11 +87,9 @@ class ReviewerRoot extends Component {
             .forEach((node) => {
                 const actions = node.querySelector('.timeline-comment-header .timeline-comment-actions');
                 if (actions) {
-                    const container = document.createElement('div');
-                    container.id = "expensiContributor-proposalActions";
+                    const container = hookReactComponentToDom(<ProposalActions />, "expensiContributor-proposalActions");
                     container.setAttribute('class', "mr-2");
                     actions.prepend(container);
-                    ReactDOM.render(<Actions actions={this.proposalActions} />, container);
                     this.proposalCommentsTagged.push(node.id);
                 }
             });
@@ -157,16 +110,37 @@ class ReviewerRoot extends Component {
         subscribeToIssue(getActiveIssueIDFromURL(), this.state.options);
     }
 
+
+
     render() {
         return (
             <>
                 <AddProposalNoteModal
-                    proposalLink={this.state.addProposalNote.link}
-                    isVisible={this.state.addProposalNote.isVisible}
-                    onCancel={() => this.setState({ addProposalNote: {isVisible: false, link: ''}})}
+                    proposalLink={this.state.addProposalNote?.link}
+                    isVisible={this.state.addProposalNote?.isVisible}
+                    onCancel={() => this.setState({addProposalNote: {isVisible: false, link: ''}})}
                 />
-                <InjectedCardLayout tabs={this.tabs}>
-                    <div className="p-2">
+
+                <Box borderColor="border.default" borderWidth={1} borderStyle="solid" borderRadius={2}>
+                    <Heading sx={{fontSize: 3, p: 2}}>ExpensiContributor</Heading>
+                    <UnderlineNav full>
+                        <UnderlineNav.Link sx={{p: 2}} href="#" selected>
+                            Main
+                        </UnderlineNav.Link>
+                        <UnderlineNav.Link sx={{p: 2}} href="#">
+                            <BookIcon />
+                            <Text sx={{ml: 1}}>
+                                Notes
+                            </Text>
+                        </UnderlineNav.Link>
+                        <UnderlineNav.Link sx={{p: 2}} href="#">
+                            <ChecklistIcon />
+                            <Text sx={{ml: 1}}>
+                                Checklist
+                            </Text>
+                        </UnderlineNav.Link>
+                    </UnderlineNav>
+                    <Box p={3}>
                         {this.state.error &&
                             <p className="flash p-2">
                                 {this.state.error}
@@ -203,11 +177,11 @@ class ReviewerRoot extends Component {
                             </div>
                             <button type="submit" className="btn btn-primary btn-sm">Subscribe</button>
                         </form>
-                    </div>
-                </InjectedCardLayout>
+                    </Box>
+                </Box>
             </>
         );
     }
 }
 
-export default ReviewerRoot;
+export default SidebarRoot;

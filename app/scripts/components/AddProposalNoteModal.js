@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import {addProposalNote} from "../actions/issue";
 import {parseCommentURL} from "../actions/common";
-import Button from "./Button";
-import Modal from "./Modal";
-
+import { Dialog, Box } from "@primer/react";
 export default class AddProposalNoteModal extends Component {
     constructor(props) {
         super(props);
@@ -39,26 +37,32 @@ export default class AddProposalNoteModal extends Component {
 
     render() {
         return (
-            <Modal title={'Add Note for Proposal'} isVisible={this.props.isVisible} onClose={this.props.onCancel}>
+            <Dialog
+                isOpen={this.props.isVisible}
+                onDismiss={this.props.onCancel}
+            >
+                <Dialog.Header>{'Add Note for Proposal'}</Dialog.Header>
                 {this.state.error &&
                     <p className="flash p-2">
                         {this.state.error}
                     </p>
                 }
-                <form onSubmit={this.submitForm} data-turbo="false">
-                    <dl className="form-group">
-                        <dt><label>Proposal Link</label></dt>
-                        <dd><input readOnly className="form-control" type="text" value={this.props.proposalLink} /></dd>
-                    </dl>
-                    <dl className="form-group">
-                        <dt><label>Note</label></dt>
-                        <dd><textarea name="note-text" className="form-control js-paste-markdown" onChange={this.saveNote}></textarea></dd>
-                    </dl>
-                    <div className="d-flex d-sm-block">
-                        <button type="submit" data-view-component="true" className="btn-primary btn"> Save Note</button>
-                    </div>
-                </form>
-            </Modal>
+                <Box p={3}>
+                    <form onSubmit={this.submitForm} data-turbo="false">
+                        <dl className="form-group">
+                            <dt><label>Proposal Link</label></dt>
+                            <dd><input readOnly className="form-control" type="text" value={this.props.proposalLink} /></dd>
+                        </dl>
+                        <dl className="form-group">
+                            <dt><label>Note</label></dt>
+                            <dd><textarea name="note-text" className="form-control js-paste-markdown" onChange={this.saveNote}></textarea></dd>
+                        </dl>
+                        <div className="d-flex d-sm-block">
+                            <button type="submit" data-view-component="true" className="btn-primary btn"> Save Note</button>
+                        </div>
+                    </form>
+                </Box>
+            </Dialog>
         );
     }
 }

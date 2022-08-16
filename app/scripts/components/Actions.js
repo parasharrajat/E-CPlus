@@ -1,7 +1,5 @@
+import {Button, ActionMenu} from '@primer/react';
 import React, {Component} from 'react'
-import Button from './Button';
-import Dropdown from './Dropdown';
-
 class Actions extends Component {
     getAction(action) {
         switch (action.type) {
@@ -10,8 +8,8 @@ class Actions extends Component {
             case 'tabs':
                 return <Tabs {...action.props} />;
             case 'dropdown':
-                return <Dropdown {...action.props} />;
-        }
+                return <ActionMenu {...action.props} />;
+            }
     }
     render() {
         return (
