@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {Dialog, Box} from '@primer/react';
 import {addProposalNote} from '../actions/issue';
-import {parseCommentURL} from '../actions/common';
+import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
+import WithStorage from './WithStorage';
 
-export default class AddProposalNoteModal extends Component {
+class AddProposalNoteModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -37,6 +38,7 @@ export default class AddProposalNoteModal extends Component {
     };
 
     render() {
+        console.log(this.props);
         return (
             <Dialog
                 isOpen={this.props.isVisible}
@@ -57,7 +59,7 @@ export default class AddProposalNoteModal extends Component {
                         </dl>
                         <dl className="form-group">
                             <dt><label>Note</label></dt>
-                            <dd><textarea name="note-text" className="form-control js-paste-markdown" onChange={this.saveNote} /></dd>
+                            <dd><textarea name="note-text" className="form-control js-paste-markdown" value={this.props.note?.note} onChange={this.saveNote} /></dd>
                         </dl>
                         <div className="d-flex d-sm-block">
                             <button type="submit" data-view-component="true" className="btn-primary btn"> Save Note</button>
@@ -68,3 +70,15 @@ export default class AddProposalNoteModal extends Component {
         );
     }
 }
+
+export default WithStorage({
+    note: {
+        key: ({proposalLink}) => {
+            if (!proposalLink) {
+                return;
+            }
+            const {issueID, commentID} = parseCommentURL(proposalLink);
+            return `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`;
+        },
+    },
+})(AddProposalNoteModal);

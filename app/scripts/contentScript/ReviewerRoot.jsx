@@ -10,6 +10,7 @@ import ProposalActions from '../components/ProposalActions';
 import {proposalModalRef} from '../lib/proposalNoteModal';
 
 import {getActiveIssueIDFromURL, subscribeToIssue} from '../actions/issue';
+import {parseCommentURL} from '../actions/common';
 
 class ReviewerRoot extends Component {
     constructor(props) {
@@ -109,8 +110,10 @@ class ReviewerRoot extends Component {
                     '.timeline-comment-header .timeline-comment-actions',
                 );
                 if (actions) {
+                    const timeNode = node.querySelector(`#${node.id}-permalink` || '.timeline-comment-header-text .js-timestamp');
+                    const {issueID, commentID} = parseCommentURL(timeNode.href);
                     const container = hookReactComponentToDom(
-                        <ProposalActions />,
+                        <ProposalActions issueID={issueID} commentID={commentID} />,
                         'expensiContributor-proposalActions',
                     );
                     container.setAttribute('class', 'mr-2');
@@ -205,7 +208,6 @@ class ReviewerRoot extends Component {
         }
     };
 
-
     render() {
         return (
             <>
@@ -223,8 +225,9 @@ class ReviewerRoot extends Component {
                 >
                     <Heading sx={{fontSize: 3, p: 2}}>ExpensiContributor</Heading>
                     <UnderlineNav full>
-                        {this.tabs.map((tab) => (
-                            <UnderlineNav.Link sx={{p: 2}} href="#" selected={this.state.selectedTab === tab.key} onClick={(e) => this.selectTab(e, tab)}>
+                        {this.tabs.map((tab, index) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <UnderlineNav.Link key={`tab${index}`} sx={{p: 2}} href="#" selected={this.state.selectedTab === tab.key} onClick={(e) => this.selectTab(e, tab)}>
                                 {tab.icon && <tab.icon />}
                                 <Text sx={{ml: tab.icon ? 1 : null}}>{tab.title}</Text>
                             </UnderlineNav.Link>

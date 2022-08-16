@@ -1,15 +1,7 @@
+import browser from 'webextension-polyfill';
+
 function saveLocalData(key, newData) {
-    const fileData = JSON.parse(localStorage.getItem('mainFile'));
-
-    // if (!fileData[key]) {
-    //   return;
-    // }
-    const rowData = {...(fileData[key] || {}), ...newData};
-
-    localStorage.setItem('mainFile', JSON.stringify({
-        ...fileData,
-        [key]: rowData,
-    }));
+    return browser.storage.local.set({[key]: newData});
 }
 function readLocalData() {
     return JSON.parse(localStorage.getItem('mainFile'));
@@ -34,25 +26,20 @@ function addRow(id, data) {
     if (!id) {
         throw new Error('NO ID found');
     }
-    saveLocalData(id, data);
+    return saveLocalData(id, data);
 }
 
-function clientRequestHandler(request, sender, sendResponse) {
-    console.debug('Message from the content script:', request);
-    let response = null;
+function responseHandler(actionCallback, sendResponse) {
     try {
-        switch (request.end) {
-        case 'add': {
-            const {id} = request.data;
-            delete request.data.id;
-            response = addRow(id, request.data);
-        } break;
-        case 'get': {
-            const {id} = request.data;
-            delete request.data.id;
-            response = get(id);
-        } break;
-        default: return false;
+        const response = actionCallback();
+        if (response instanceof Promise) {
+            return response.then((data) => ({
+                error: false,
+                data,
+            })).catch((e) => ({
+                error: true,
+                message: e.message,
+            }));
         }
         sendResponse({
             error: false,
@@ -66,9 +53,25 @@ function clientRequestHandler(request, sender, sendResponse) {
     }
 }
 
+function clientRequestHandler(request, sender, sendResponse) {
+    console.debug('Message from the content script:', request);
+    switch (request.end) {
+    case 'add': {
+        const {id} = request.data;
+        delete request.data.id;
+        return responseHandler(() => addRow(id, request.data), sendResponse);
+    }
+    case 'get': {
+        const {id} = request.data;
+        delete request.data.id;
+        return responseHandler(() => get(id), sendResponse);
+    }
+    default: return false;
+    }
+}
+
 function setup() {
     localStorage.setItem('mainFile', JSON.stringify({}));
-    // eslint-disable-next-line no-undef
     browser.runtime.onMessage.addListener(clientRequestHandler);
 }
 

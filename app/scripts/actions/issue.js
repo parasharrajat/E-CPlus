@@ -24,7 +24,7 @@ export function addProposalNote(commentID, issueID, link, note) {
     return sendDataToBG({
         end: 'add',
         data: {
-            id: `${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`,
+            id: `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`,
             link,
             note,
             issue: issueID,

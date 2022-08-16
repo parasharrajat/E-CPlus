@@ -6,24 +6,27 @@ import {
 import {
     BookIcon, XIcon, PersonIcon, ArrowRightIcon,
 } from '@primer/octicons-react';
-import {getProposalComments} from '../actions/issue';
+import WithStorage from './WithStorage';
+import {STORAGE_KEYS} from '../actions/common';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    notes: PropTypes.arrayOf(PropTypes.any),
 };
-export default class NotesPanel extends Component {
+
+const defaultProps = {
+    notes: [],
+};
+class NotesPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            notes: {},
         };
     }
 
-    componentDidMount() {
-        getProposalComments().then((notes) => this.setState({notes}));
-    }
-
     render() {
+        console.debug(this.props.notes);
         return (
             <>
                 <Header sx={{px: 3, py: 2}}>
@@ -35,7 +38,7 @@ export default class NotesPanel extends Component {
                     <IconButton variant="default" sx={{background: 'transparent'}} icon={XIcon} size="large" onClick={this.props.onClose} />
                 </Header>
                 <Box p={3}>
-                    {Object.values(this.state.notes).map((note, index) => (
+                    {this.props.notes.map((note, index) => (
                         <Box bg="canvas.subtle" borderRadius={2} className="notespanel-note">
                             <ActionList.LinkItem sx={{width: 'auto', position: 'relative'}} href={note.link}>
                                 Note#
@@ -61,3 +64,10 @@ export default class NotesPanel extends Component {
 }
 
 NotesPanel.propTypes = propTypes;
+NotesPanel.defaultProps = defaultProps;
+
+export default WithStorage({
+    notes: {
+        key: STORAGE_KEYS.NOTE,
+    },
+})(NotesPanel);

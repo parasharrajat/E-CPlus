@@ -2,8 +2,9 @@ import {Button, ActionMenu, ActionList} from '@primer/react';
 import React, {Component} from 'react';
 import {FileAddedIcon, EyeIcon} from '@primer/octicons-react';
 import {markProposalReviewed as markProposalReviewedAction} from '../actions/issue';
-import {parseCommentURL} from '../actions/common';
+import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
 import proposalNoteModal from '../lib/proposalNoteModal';
+import WithStorage from './WithStorage';
 
 class ProposalActions extends Component {
     markProposalReviewed = (e) => {
