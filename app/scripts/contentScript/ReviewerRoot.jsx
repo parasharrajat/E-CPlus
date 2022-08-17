@@ -37,16 +37,18 @@ class ReviewerRoot extends Component {
 
             // Set the correct ref to modal
             proposalModalRef.current = {
-                show: (commentLink) => {
+                show: (commentLink, userHandle, userAvatar) => {
                     this.setState({
                         addProposalNote: {
                             isVisible: true,
                             link: commentLink,
+                            userHandle,
+                            userAvatar,
                         },
                     });
                 },
                 hide: () => {
-                    this.setState({addProposalNote: {isVisible: false, link: ''}});
+                    this.setState({addProposalNote: {isVisible: false, link: '', userHandle: null}});
                 },
             };
         } catch (e) {
@@ -202,6 +204,8 @@ class ReviewerRoot extends Component {
                 <AddProposalNoteModal
                     proposalLink={this.state.addProposalNote?.link}
                     isVisible={this.state.addProposalNote?.isVisible}
+                    userHandle={this.state.addProposalNote?.userHandle}
+                    userAvatar={this.state.addProposalNote?.userAvatar}
                     onCancel={() => this.setState({addProposalNote: {isVisible: false, link: ''}})}
                 />
 

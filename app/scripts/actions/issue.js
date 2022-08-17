@@ -1,4 +1,4 @@
-import {sendDataToBG, STORAGE_KEYS} from './common';
+import {NOTE_TYPE, sendDataToBG, STORAGE_KEYS} from './common';
 
 export function getActiveIssueIDFromURL() {
     switch (true) {
@@ -20,15 +20,18 @@ export function subscribeToIssue(id, options) {
     }).then();
 }
 
-export function addProposalNote(commentID, issueID, link, note) {
+export function addProposalNote(commentID, issueID, link, note, userHandle, userAvatar) {
     return sendDataToBG({
         end: 'add',
         data: {
+            noteType: NOTE_TYPE.PROPOSAL,
             id: `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`,
             link,
             note,
             issue: issueID,
             commentID,
+            userHandle,
+            userAvatar,
         },
     }).then();
 }

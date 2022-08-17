@@ -1,14 +1,28 @@
 import React, {Component} from 'react';
 import '../../styles/contentscript.css';
-import {Box, NavList, Text} from '@primer/react';
 import {
-    BookIcon, ChecklistIcon, GearIcon, CopilotIcon,
+    Box, NavList, Text, themeGet,
+} from '@primer/react';
+import {
+    BookIcon,
+    ChecklistIcon,
+    GearIcon,
+    CopilotIcon,
 } from '@primer/octicons-react';
+import {any} from 'prop-types';
 import NotesPanel from '../components/NotesPanel';
 import WithStorage from '../components/WithStorage';
 import {STORAGE_KEYS} from '../actions/common';
 import settings from '../actions/settings';
 
+const propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    settings: any,
+};
+
+const defaultProps = {
+    settings: {},
+};
 class SidebarRoot extends Component {
     constructor(props) {
         super(props);
@@ -41,8 +55,7 @@ class SidebarRoot extends Component {
         ];
     }
 
-    componentWillUnmount() {
-    }
+    componentWillUnmount() {}
 
     onNavClick = (e, nav) => {
         e.preventDefault();
@@ -55,8 +68,10 @@ class SidebarRoot extends Component {
 
     renderNav = (navKey) => {
         switch (navKey) {
-        case 'notes': return <NotesPanel onClose={this.closePanel} />;
-        default: break;
+        case 'notes':
+            return <NotesPanel onClose={this.closePanel} />;
+        default:
+            break;
         }
     };
 
@@ -78,18 +93,25 @@ class SidebarRoot extends Component {
                     bg="canvas.default"
                     sx
                 >
-                    <NavList sx={{
-                        li: {
-                            ml: 1,
-                            mr: 1,
-                            borderRadius: 0,
-                            width: 'auto',
-                        },
-                    }}
+                    <NavList
+                        sx={{
+                            li: {
+                                ml: 1,
+                                mr: 1,
+                                borderRadius: 0,
+                                width: 'auto',
+                            },
+                        }}
                     >
                         {this.pageNavs.map((nav, index) => (
                             // eslint-disable-next-line react/no-array-index-key
-                            <NavList.Item key={`nav${index}`} href="#" sx={{px: 1}} onClick={(e) => this.onNavClick(e, nav)} className="sidebarRoot-nav">
+                            <NavList.Item
+                                key={`nav${index}`}
+                                href="#"
+                                sx={{px: 1}}
+                                onClick={(e) => this.onNavClick(e, nav)}
+                                className="sidebarRoot-nav"
+                            >
                                 <NavList.LeadingVisual sx={{height: 'auto'}}>
                                     <nav.icon size="small" />
                                 </NavList.LeadingVisual>
@@ -102,17 +124,36 @@ class SidebarRoot extends Component {
                             <NavList.Item
                                 key={`nav${index}`}
                                 href="#"
-                                sx={{px: 1}}
                                 onClick={(e) => this.onNavClick(e, nav)}
-                                className={`sidebarRoot-nav ${nav.key === 'c+view' && this.props.settings?.cPlusView ? 'active' : ''}`}
+                                sx={{
+                                    px: 1,
+                                    ...(nav.key === 'c+view'
+                    && this.props.settings?.cPlusView && {
+                                        bg: 'sponsors.emphasis',
+                                        color: 'fg.onEmphasis',
+                                        border: 'border.muted',
+                                        borderColor: 'sponsors.muted',
+                                    }),
+                                }}
+                                className={`sidebarRoot-nav ${
+                                    nav.key === 'c+view' && this.props.settings?.cPlusView
+                                        ? 'active'
+                                        : ''
+                                }`}
                             >
                                 <NavList.LeadingVisual
                                     sx={{
                                         height: 'auto',
-                                        color: nav.key === 'c+view' && this.props.settings?.cPlusView ? '#8250df' : '',
                                     }}
                                 >
-                                    <nav.icon size="small" />
+                                    <nav.icon
+                                        size="small"
+                                        fill={
+                                            nav.key === 'c+view' && this.props.settings?.cPlusView
+                                                ? themeGet('fg.onEmphasis')
+                                                : undefined
+                                        }
+                                    />
                                 </NavList.LeadingVisual>
                                 <Text fontSize="small">{nav.title}</Text>
                             </NavList.Item>
@@ -120,7 +161,9 @@ class SidebarRoot extends Component {
                     </NavList>
                 </Box>
                 <Box
-                    className={`sidebarRoot-panel ${this.state.panelVisible ? 'visible' : ''}`}
+                    className={`sidebarRoot-panel ${
+                        this.state.panelVisible ? 'visible' : ''
+                    }`}
                     borderColor="border.default"
                     borderWidth={1}
                     borderRightWidth={0}
@@ -136,6 +179,9 @@ class SidebarRoot extends Component {
         );
     }
 }
+
+SidebarRoot.propTypes = propTypes;
+SidebarRoot.defaultProps = defaultProps;
 
 export default WithStorage({
     settings: {

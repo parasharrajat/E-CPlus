@@ -17,7 +17,9 @@ class ProposalActions extends Component {
 
         // '.timeline-comment-header-text .js-timestamp' was old selection for link
         const timeNode = issueNode.querySelector(`#${issueNode.id}-permalink` || '.timeline-comment-header-text .js-timestamp');
-        proposalNoteModal.show(timeNode.href);
+        const userHandleNode = issueNode.querySelector('.timeline-comment-header .author');
+        const userAvatarNode = issueNode.parentNode.querySelector('img.avatar');
+        proposalNoteModal.show(timeNode.href, userHandleNode.innerText, userAvatarNode.src);
     };
 
     render() {

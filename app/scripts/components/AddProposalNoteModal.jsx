@@ -13,16 +13,6 @@ class AddProposalNoteModal extends Component {
         };
         this.saveNote = this.saveNote.bind(this);
         this.clearError = this.clearError.bind(this);
-        this.submitForm = this.submitForm.bind(this);
-    }
-
-    saveNote(e) {
-        this.setState({note: e.target.value});
-        this.clearError();
-    }
-
-    clearError() {
-        this.setState({error: ''});
     }
 
     submitForm = (e) => {
@@ -33,9 +23,18 @@ class AddProposalNoteModal extends Component {
         }
         this.clearError();
         const {issueID, commentID} = parseCommentURL(this.props.proposalLink);
-        addProposalNote(commentID, issueID, this.props.proposalLink, this.state.note);
+        addProposalNote(commentID, issueID, this.props.proposalLink, this.state.note, this.props.userHandle, this.props.userAvatar);
         this.props.onCancel();
     };
+
+    clearError() {
+        this.setState({error: ''});
+    }
+
+    saveNote(e) {
+        this.setState({note: e.target.value});
+        this.clearError();
+    }
 
     render() {
         return (
@@ -58,7 +57,7 @@ class AddProposalNoteModal extends Component {
                         </dl>
                         <dl className="form-group">
                             <dt><label>Note</label></dt>
-                            <dd><textarea name="note-text" className="form-control js-paste-markdown" value={this.props.note?.note} onChange={this.saveNote} /></dd>
+                            <dd><textarea name="note-text" className="form-control js-paste-markdown" defaultValue={this.props.note?.note} onChange={this.saveNote} /></dd>
                         </dl>
                         <div className="d-flex d-sm-block">
                             <button type="submit" data-view-component="true" className="btn-primary btn"> Save Note</button>
