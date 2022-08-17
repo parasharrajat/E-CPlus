@@ -1,0 +1,39 @@
+name: Build and release the extension
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/checkout@v3
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+      run: npm ci
+
+    - name: Build Chrome Extension
+      run: npm run build chrome
+
+    - name: Build Firefox Extension
+      run: npm run build firefox
+
+    - name: Build Edge Extension
+      run: npm run build edge
+
+    - name: Create the new release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "packages/*"
+        generateReleaseNotes: true
+        draft: true
+        allowUpdates: true
