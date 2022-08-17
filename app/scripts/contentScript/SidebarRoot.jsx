@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import '../../styles/contentscript.css';
 import {
-    Box, NavList, Text, themeGet,
+    Box, NavList, Overlay, Text, themeGet,
 } from '@primer/react';
 import {
     BookIcon,
@@ -83,6 +83,7 @@ class SidebarRoot extends Component {
         return (
             <>
                 <Box
+                    ref={(el) => this.sidebarRef = el}
                     className="sidebarRoot-menu"
                     borderColor="border.default"
                     borderWidth={1}
@@ -106,6 +107,7 @@ class SidebarRoot extends Component {
                         {this.pageNavs.map((nav, index) => (
                             // eslint-disable-next-line react/no-array-index-key
                             <NavList.Item
+                                // eslint-disable-next-line react/no-array-index-key
                                 key={`nav${index}`}
                                 href="#"
                                 sx={{px: 1}}
@@ -122,6 +124,7 @@ class SidebarRoot extends Component {
                         {this.globalNavs.map((nav, index) => (
                             // eslint-disable-next-line react/no-array-index-key
                             <NavList.Item
+                                // eslint-disable-next-line react/no-array-index-key
                                 key={`nav${index}`}
                                 href="#"
                                 onClick={(e) => this.onNavClick(e, nav)}
@@ -160,21 +163,29 @@ class SidebarRoot extends Component {
                         ))}
                     </NavList>
                 </Box>
-                <Box
-                    className={`sidebarRoot-panel ${
-                        this.state.panelVisible ? 'visible' : ''
-                    }`}
-                    borderColor="border.default"
-                    borderWidth={1}
-                    borderRightWidth={0}
-                    borderStyle="solid"
-                    borderRadius={0}
-                    width={410}
-                    height="100%"
-                    bg="canvas.default"
-                >
-                    {this.renderNav(this.state.panel)}
-                </Box>
+                {this.state.panelVisible && (
+                    <Overlay
+                        returnFocusRef={this.sidebarRef}
+                        onEscape={this.closePanel}
+                        onClickOutside={this.closePanel}
+                    >
+                        <Box
+                            className={`sidebarRoot-panel ${
+                                this.state.panelVisible ? 'visible' : ''
+                            }`}
+                            borderColor="border.default"
+                            borderWidth={1}
+                            borderRightWidth={0}
+                            borderStyle="solid"
+                            borderRadius={0}
+                            width={410}
+                            height="100%"
+                            bg="canvas.default"
+                        >
+                            {this.renderNav(this.state.panel)}
+                        </Box>
+                    </Overlay>
+                )}
             </>
         );
     }

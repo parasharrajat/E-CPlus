@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
-    Text, Box, Header, IconButton, ActionList, Label, CircleBadge, themeGet, Avatar,
+    Text, Box, Header, IconButton, ActionList, Label, CircleBadge, Avatar,
 } from '@primer/react';
 import {
-    BookIcon, XIcon, PersonIcon, ArrowRightIcon,
+    BookIcon, XIcon, ArrowRightIcon,
 } from '@primer/octicons-react';
 import WithStorage from './WithStorage';
 import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
