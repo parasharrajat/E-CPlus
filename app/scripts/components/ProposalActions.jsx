@@ -1,10 +1,9 @@
 import {Button, ActionMenu, ActionList} from '@primer/react';
 import React, {Component} from 'react';
-import {FileAddedIcon, EyeIcon} from '@primer/octicons-react';
+import {EyeIcon, PencilIcon} from '@primer/octicons-react';
 import {markProposalReviewed as markProposalReviewedAction} from '../actions/issue';
-import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
+import {parseCommentURL} from '../actions/common';
 import proposalNoteModal from '../lib/proposalNoteModal';
-import WithStorage from './WithStorage';
 
 class ProposalActions extends Component {
     markProposalReviewed = (e) => {
@@ -24,7 +23,7 @@ class ProposalActions extends Component {
     render() {
         return (
             <div className="flex-items-center flex-auto d-flex">
-                <Button sx={{ml: 2}} leadingIcon={FileAddedIcon} size="small" onClick={this.addNoteforProposal}>Add Note</Button>
+                <Button sx={{ml: 2}} leadingIcon={PencilIcon} size="small" onClick={this.addNoteforProposal}>Note</Button>
                 <ActionMenu>
                     <ActionMenu.Button size="small" sx={{ml: 2}}>More</ActionMenu.Button>
                     <ActionMenu.Overlay>

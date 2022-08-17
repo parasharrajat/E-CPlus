@@ -38,7 +38,6 @@ class AddProposalNoteModal extends Component {
     };
 
     render() {
-        console.log(this.props);
         return (
             <Dialog
                 isOpen={this.props.isVisible}

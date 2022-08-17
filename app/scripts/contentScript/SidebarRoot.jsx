@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import '../../styles/contentscript.css';
-import {Box, NavList} from '@primer/react';
-import {BookIcon, ChecklistIcon} from '@primer/octicons-react';
+import {Box, NavList, Text} from '@primer/react';
+import {BookIcon, ChecklistIcon, GearIcon} from '@primer/octicons-react';
 import NotesPanel from '../components/NotesPanel';
 
 class SidebarRoot extends Component {
@@ -10,7 +10,7 @@ class SidebarRoot extends Component {
         this.state = {
             panelVisible: false,
         };
-        this.navs = [
+        this.pageNavs = [
             {
                 key: 'notes',
                 title: 'Notes',
@@ -20,6 +20,13 @@ class SidebarRoot extends Component {
                 key: 'checklist',
                 title: 'Checklist',
                 icon: ChecklistIcon,
+            },
+        ];
+        this.globalNavs = [
+            {
+                key: 'settings',
+                title: 'Settings',
+                icon: GearIcon,
             },
         ];
     }
@@ -58,19 +65,31 @@ class SidebarRoot extends Component {
                     sx
                 >
                     <NavList sx={{
-                        '> li': {
-                            margin: 0,
+                        li: {
+                            ml: 1,
+                            mr: 1,
                             borderRadius: 0,
+                            width: 'auto',
                         },
                     }}
                     >
-                        {this.navs.map((nav, index) => (
+                        {this.pageNavs.map((nav, index) => (
                             // eslint-disable-next-line react/no-array-index-key
-                            <NavList.Item key={`nav${index}`} href="#" onClick={(e) => this.onNavClick(e, nav)} className="sidebarRoot-nav">
+                            <NavList.Item key={`nav${index}`} href="#" sx={{px: 1}} onClick={(e) => this.onNavClick(e, nav)} className="sidebarRoot-nav">
                                 <NavList.LeadingVisual sx={{height: 'auto'}}>
-                                    <nav.icon size="medium" />
+                                    <nav.icon size="small" />
                                 </NavList.LeadingVisual>
-                                {nav.title}
+                                <Text fontSize="small">{nav.title}</Text>
+                            </NavList.Item>
+                        ))}
+                        <NavList.Divider />
+                        {this.globalNavs.map((nav, index) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <NavList.Item key={`nav${index}`} href="#" sx={{px: 1}} onClick={(e) => this.onNavClick(e, nav)} className="sidebarRoot-nav">
+                                <NavList.LeadingVisual sx={{height: 'auto'}}>
+                                    <nav.icon size="small" />
+                                </NavList.LeadingVisual>
+                                <Text fontSize="small">{nav.title}</Text>
                             </NavList.Item>
                         ))}
                     </NavList>

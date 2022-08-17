@@ -1,4 +1,3 @@
-import {BookIcon, ChecklistIcon} from '@primer/octicons-react';
 import React, {Component} from 'react';
 import {
     Box, UnderlineNav, Heading, Text,
@@ -23,17 +22,6 @@ class ReviewerRoot extends Component {
             {
                 title: 'Main',
                 key: 'main',
-            },
-            {
-                title: 'Notes',
-                key: 'notes',
-                icon: BookIcon,
-            },
-            {
-                title: 'CheckList',
-                key: 'checklist',
-                icon: ChecklistIcon,
-
             },
         ];
         this.proposalCommentsTagged = [];
