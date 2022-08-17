@@ -13,6 +13,7 @@ export const ISSUE_SUBSCRIPTION = {
 export const STORAGE_KEYS = {
     NOTE: 'note_',
     PROPOSAL_COMMENT: 'proposal_comment_',
+    SETTINGS: 'settings_',
 };
 
 export function parseCommentURL(url) {

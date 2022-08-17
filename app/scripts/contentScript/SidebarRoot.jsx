@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
 import '../../styles/contentscript.css';
 import {Box, NavList, Text} from '@primer/react';
-import {BookIcon, ChecklistIcon, GearIcon} from '@primer/octicons-react';
+import {
+    BookIcon, ChecklistIcon, GearIcon, CopilotIcon,
+} from '@primer/octicons-react';
 import NotesPanel from '../components/NotesPanel';
+import WithStorage from '../components/WithStorage';
+import {STORAGE_KEYS} from '../actions/common';
+import settings from '../actions/settings';
 
 class SidebarRoot extends Component {
     constructor(props) {
@@ -28,6 +33,11 @@ class SidebarRoot extends Component {
                 title: 'Settings',
                 icon: GearIcon,
             },
+            {
+                key: 'c+view',
+                title: 'C+ View',
+                icon: CopilotIcon,
+            },
         ];
     }
 
@@ -36,6 +46,10 @@ class SidebarRoot extends Component {
 
     onNavClick = (e, nav) => {
         e.preventDefault();
+        if (nav.key === 'c+view') {
+            settings.toggleCPlusView(!this.props.settings?.cPlusView);
+            return;
+        }
         this.setState({panelVisible: true, panel: nav.key});
     };
 
@@ -85,8 +99,19 @@ class SidebarRoot extends Component {
                         <NavList.Divider />
                         {this.globalNavs.map((nav, index) => (
                             // eslint-disable-next-line react/no-array-index-key
-                            <NavList.Item key={`nav${index}`} href="#" sx={{px: 1}} onClick={(e) => this.onNavClick(e, nav)} className="sidebarRoot-nav">
-                                <NavList.LeadingVisual sx={{height: 'auto'}}>
+                            <NavList.Item
+                                key={`nav${index}`}
+                                href="#"
+                                sx={{px: 1}}
+                                onClick={(e) => this.onNavClick(e, nav)}
+                                className={`sidebarRoot-nav ${nav.key === 'c+view' && this.props.settings?.cPlusView ? 'active' : ''}`}
+                            >
+                                <NavList.LeadingVisual
+                                    sx={{
+                                        height: 'auto',
+                                        color: nav.key === 'c+view' && this.props.settings?.cPlusView ? '#8250df' : '',
+                                    }}
+                                >
                                     <nav.icon size="small" />
                                 </NavList.LeadingVisual>
                                 <Text fontSize="small">{nav.title}</Text>
@@ -112,4 +137,8 @@ class SidebarRoot extends Component {
     }
 }
 
-export default SidebarRoot;
+export default WithStorage({
+    settings: {
+        key: STORAGE_KEYS.SETTINGS,
+    },
+})(SidebarRoot);
