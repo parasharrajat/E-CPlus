@@ -1,4 +1,5 @@
 import helper from '../lib/helper';
+import Navigation from '../lib/Navigation';
 
 function hideComment(element) {
     // eslint-disable-next-line no-param-reassign
@@ -45,19 +46,19 @@ function hideExtraComments() {
     });
 }
 
-function loadAllComments() {
-    const paginationNodes = document.querySelectorAll('.js-ajax-pagination.pagination-loader-container');
-    paginationNodes.forEach((node) => {
-        const triggerButton = node.querySelector('button.ajax-pagination-btn');
-        triggerButton.click();
-    });
-    if (paginationNodes.length) {
-        loadAllComments();
+function loadAllComments(parent) {
+    const paginationContainer = parent.querySelector('#js-progressive-timeline-item-container');
+    if (!paginationContainer) {
+        return Promise.resolve();
     }
+    return Navigation.triggerPaginate(paginationContainer).then(() => {
+        hideExtraComments();
+        return loadAllComments(paginationContainer);
+    });
 }
 
 function on() {
-    loadAllComments();
+    loadAllComments(document);
     hideExtraComments();
 }
 function off() {
