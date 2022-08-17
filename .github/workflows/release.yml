@@ -2,7 +2,9 @@ name: Build and release the extension
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: main
+    types:
+      - closed
 
 jobs:
   build:
@@ -32,6 +34,10 @@ jobs:
     - name: Build Edge Extension
       run: npm run build edge
 
+    - name: Get Tag
+      run: |
+        echo "LATEST_VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
+
     - name: Create the new release
       uses: ncipollo/release-action@v1
       with:
@@ -39,3 +45,4 @@ jobs:
         generateReleaseNotes: true
         draft: true
         allowUpdates: true
+        tag: ${{ env.LATEST_VERSION }}
