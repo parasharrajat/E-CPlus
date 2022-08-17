@@ -1,14 +1,14 @@
 {
   "appName": {
-    "message": "ExpensiContributor",
+    "message": "ExpensiyC+",
     "description": "The name of the application"
   },
   "appShortName": {
-    "message": "ExpensiCont",
+    "message": "ExpensiyC+",
     "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
   },
   "appDescription": {
-    "message": "--",
+    "message": "Browser extension for Expensify Contributor Plus. It comes handy in many ways to ease the life of C+.",
     "description": "The description of the application"
   },
   "browserActionTitle": {
