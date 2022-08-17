@@ -9,7 +9,10 @@ import ProposalActions from '../components/ProposalActions';
 import {proposalModalRef} from '../lib/proposalNoteModal';
 
 import {getActiveIssueIDFromURL, subscribeToIssue} from '../actions/issue';
-import {parseCommentURL} from '../actions/common';
+import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
+import WithStorage from '../components/WithStorage';
+import helper from '../lib/helper';
+import cPlusView from '../actions/cPlusView';
 
 class ReviewerRoot extends Component {
     constructor(props) {
@@ -30,6 +33,9 @@ class ReviewerRoot extends Component {
 
     componentDidMount() {
         try {
+            if (this.props.settings?.cPlusView) {
+                cPlusView.on();
+            }
             this.findProposalCommentsAndFeatures(
                 document.querySelectorAll('.js-discussion [id^=issuecomment-]'),
             );
@@ -88,13 +94,7 @@ class ReviewerRoot extends Component {
                 (node) => node.id?.includes('issuecomment-')
                     && !this.proposalCommentsTagged.includes(node.id),
             )
-            .filter((node) => {
-                const contentNode = node.querySelector('.edit-comment-hide');
-                if (contentNode) {
-                    return contentNode.textContent.trim().match(/^proposal/gi);
-                }
-                return false;
-            })
+            .filter(helper.isCommentProposal)
             .forEach((node) => {
                 const actions = node.querySelector(
                     '.timeline-comment-header .timeline-comment-actions',
@@ -234,4 +234,8 @@ class ReviewerRoot extends Component {
     }
 }
 
-export default ReviewerRoot;
+export default WithStorage({
+    settings: {
+        key: STORAGE_KEYS.SETTINGS,
+    },
+})(ReviewerRoot);
