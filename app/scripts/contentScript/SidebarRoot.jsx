@@ -14,6 +14,7 @@ import NotesPanel from '../components/NotesPanel';
 import WithStorage from '../components/WithStorage';
 import {STORAGE_KEYS} from '../actions/common';
 import settings from '../actions/settings';
+import {isDev} from '../lib/env';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
@@ -35,24 +36,29 @@ class SidebarRoot extends Component {
                 title: 'Notes',
                 icon: BookIcon,
             },
-            {
-                key: 'checklist',
-                title: 'Checklist',
-                icon: ChecklistIcon,
-            },
         ];
         this.globalNavs = [
-            {
-                key: 'settings',
-                title: 'Settings',
-                icon: GearIcon,
-            },
             {
                 key: 'c+view',
                 title: 'C+ View',
                 icon: CopilotIcon,
             },
         ];
+
+        if (isDev()) {
+            this.pageNavs.push(
+                {
+                    key: 'checklist',
+                    title: 'Checklist',
+                    icon: ChecklistIcon,
+                },
+            );
+            this.globalNavs.push({
+                key: 'settings',
+                title: 'Settings',
+                icon: GearIcon,
+            });
+        }
     }
 
     componentWillUnmount() {}

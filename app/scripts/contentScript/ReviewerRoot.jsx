@@ -13,6 +13,7 @@ import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
 import WithStorage from '../components/WithStorage';
 import helper from '../lib/helper';
 import cPlusView from '../actions/cPlusView';
+import {isDev} from '../lib/env';
 
 class ReviewerRoot extends Component {
     constructor(props) {
@@ -208,27 +209,28 @@ class ReviewerRoot extends Component {
                     userAvatar={this.state.addProposalNote?.userAvatar}
                     onCancel={() => this.setState({addProposalNote: {isVisible: false, link: ''}})}
                 />
-
-                <Box
-                    borderColor="border.default"
-                    borderWidth={1}
-                    borderStyle="solid"
-                    borderRadius={2}
-                >
-                    <Heading sx={{fontSize: 3, p: 2}}>ExpensiContributor</Heading>
-                    <UnderlineNav full>
-                        {this.tabs.map((tab, index) => (
+                {isDev() && (
+                    <Box
+                        borderColor="border.default"
+                        borderWidth={1}
+                        borderStyle="solid"
+                        borderRadius={2}
+                    >
+                        <Heading sx={{fontSize: 3, p: 2}}>ExpensiContributor</Heading>
+                        <UnderlineNav full>
+                            {this.tabs.map((tab, index) => (
                             // eslint-disable-next-line react/no-array-index-key
-                            <UnderlineNav.Link key={`tab${index}`} sx={{p: 2}} href="#" selected={this.state.selectedTab === tab.key} onClick={(e) => this.selectTab(e, tab)}>
-                                {tab.icon && <tab.icon />}
-                                <Text sx={{ml: tab.icon ? 1 : null}}>{tab.title}</Text>
-                            </UnderlineNav.Link>
-                        ))}
-                    </UnderlineNav>
-                    <Box p={3}>
-                        {this.renderTabContent(this.state.selectedTab)}
+                                <UnderlineNav.Link key={`tab${index}`} sx={{p: 2}} href="#" selected={this.state.selectedTab === tab.key} onClick={(e) => this.selectTab(e, tab)}>
+                                    {tab.icon && <tab.icon />}
+                                    <Text sx={{ml: tab.icon ? 1 : null}}>{tab.title}</Text>
+                                </UnderlineNav.Link>
+                            ))}
+                        </UnderlineNav>
+                        <Box p={3}>
+                            {this.renderTabContent(this.state.selectedTab)}
+                        </Box>
                     </Box>
-                </Box>
+                )}
             </>
         );
     }
