@@ -30,8 +30,10 @@ function addChangedkeysToStore(changes, area) {
         return;
     }
     Object.keys(changes).forEach((key) => {
-        if (!changes[key].oldValue && changes[key].newValue) {
+        if (changes[key].newValue) {
             storedKeys[key] = undefined;
+        } else {
+            delete storedKeys[key];
         }
     });
 }

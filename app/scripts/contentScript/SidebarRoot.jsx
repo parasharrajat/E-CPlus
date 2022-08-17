@@ -181,6 +181,8 @@ class SidebarRoot extends Component {
                             width={410}
                             height="100%"
                             bg="canvas.default"
+                            display="flex"
+                            flexDirection="column"
                         >
                             {this.renderNav(this.state.panel)}
                         </Box>

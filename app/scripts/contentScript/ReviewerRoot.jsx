@@ -117,7 +117,7 @@ class ReviewerRoot extends Component {
         // Select the node that will be observed for mutations
         const targetNode = document.querySelector('.js-discussion');
         const config = {attributes: false, childList: true, subtree: true};
-        const callback = (mutationList, observer) => {
+        const callback = (mutationList) => {
             // eslint-disable-next-line no-restricted-syntax
             for (const mutation of mutationList) {
                 if (mutation.type === 'childList') {

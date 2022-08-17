@@ -2,7 +2,7 @@ function onPageNavigationListener(navigationHandler) {
     // Select the node that will be observed for mutations
     const targetNode = document.querySelector('head title');
     const config = {characterData: true};
-    const callback = (mutationList, observer) => {
+    const callback = (mutationList) => {
         // eslint-disable-next-line no-restricted-syntax
         for (const mutation of mutationList) {
             if (mutation.type === 'characterData') {
