@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "webextension-toolbox dev",
 		"build": "webextension-toolbox build",
-		"postversion": "./version.sh"
+		"postversion": "sh ./version.sh"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.18.10",
