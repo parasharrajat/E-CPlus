@@ -1,10 +1,11 @@
 {
 	"name": "expensify-contributor-plus",
-	"version": "0.0.1",
-	"description": "--",
+	"version": "1.0.1",
+	"description": "Browser extension for Expensify Contributor Plus. It comes handy in many ways to ease the life of C+.",
 	"scripts": {
 		"dev": "webextension-toolbox dev",
-		"build": "webextension-toolbox build"
+		"build": "webextension-toolbox build",
+		"postversion": "sh ./version.sh"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.18.10",
