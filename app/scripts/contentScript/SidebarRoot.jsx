@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import '../../styles/contentscript.css';
 import {
+    Avatar,
     Box, NavList, Overlay, Text, themeGet,
 } from '@primer/react';
 import {
@@ -10,6 +11,7 @@ import {
     CopilotIcon,
 } from '@primer/octicons-react';
 import {any} from 'prop-types';
+import Browser from 'webextension-polyfill';
 import NotesPanel from '../components/NotesPanel';
 import WithStorage from '../components/WithStorage';
 import {STORAGE_KEYS} from '../actions/common';
@@ -108,6 +110,11 @@ class SidebarRoot extends Component {
                                 borderRadius: 0,
                                 width: 'auto',
                             },
+                            'li:last-child': {
+                                background: 'unset!important',
+                                color: 'unset!important',
+                                cursor: 'auto',
+                            },
                         }}
                     >
                         {this.pageNavs.map((nav, index) => (
@@ -120,7 +127,7 @@ class SidebarRoot extends Component {
                                 onClick={(e) => this.onNavClick(e, nav)}
                                 className="sidebarRoot-nav"
                             >
-                                <NavList.LeadingVisual sx={{height: 'auto'}}>
+                                <NavList.LeadingVisual sx={{height: 'auto', m: 0}}>
                                     <nav.icon size="small" />
                                 </NavList.LeadingVisual>
                                 <Text fontSize="small">{nav.title}</Text>
@@ -150,11 +157,7 @@ class SidebarRoot extends Component {
                                         : ''
                                 }`}
                             >
-                                <NavList.LeadingVisual
-                                    sx={{
-                                        height: 'auto',
-                                    }}
-                                >
+                                <NavList.LeadingVisual sx={{height: 'auto', m: 0}}>
                                     <nav.icon
                                         size="small"
                                         fill={
@@ -167,6 +170,9 @@ class SidebarRoot extends Component {
                                 <Text fontSize="small">{nav.title}</Text>
                             </NavList.Item>
                         ))}
+                        <NavList.Item as="span" sx={{px: 1}} className="sidebarRoot-nav">
+                            <Avatar size={32} square src={Browser.runtime.getURL('images/icon-main.png')} />
+                        </NavList.Item>
                     </NavList>
                 </Box>
                 {this.state.panelVisible && (

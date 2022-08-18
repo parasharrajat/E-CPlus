@@ -37,6 +37,9 @@
       "all_frames": false
     }
   ],
+  "web_accessible_resources":[
+    "images/*"
+  ],
   "permissions": [
     "activeTab",
     "identity",
