@@ -4,9 +4,6 @@ import {
     Box, NavList, Overlay, Portal, Text, themeGet,
 } from '@primer/react';
 import {
-    BookIcon,
-    ChecklistIcon,
-    GearIcon,
     CopilotIcon,
 } from '@primer/octicons-react';
 import {any} from 'prop-types';
@@ -15,7 +12,6 @@ import NotesPanel from '../components/NotesPanel';
 import WithStorage from '../components/WithStorage';
 import {STORAGE_KEYS} from '../actions/common';
 import settings from '../actions/settings';
-import {isDev} from '../lib/env';
 import SettingsPage from '../components/SettingsPage';
 import ChecklistPanel from '../components/ChecklistPanel';
 import helper from '../lib/helper';
