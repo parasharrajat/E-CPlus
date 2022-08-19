@@ -14,12 +14,14 @@ import {
     XIcon,
     ArrowRightIcon,
     TrashIcon,
+    CheckCircleFillIcon,
 } from '@primer/octicons-react';
 import WithStorage from './WithStorage';
 import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
 import TitleLoader from './TitleLoader';
 import {removeProposalNote} from '../actions/issue';
 import helper from '../lib/helper';
+import EmptyContent from './EmptyContent';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
@@ -59,6 +61,9 @@ class NotesPanel extends Component {
                     />
                 </Header>
                 <Box p={3} overflowY="auto" overflowX="hidden" height="100%" flex={1}>
+                    {!this.props.notes.length && (
+                        <EmptyContent title="Looks like you are all clear on your doubts." icon={CheckCircleFillIcon} />
+                    )}
                     {this.props.notes.map((note, index) => (
                         <Box
                             // eslint-disable-next-line react/no-array-index-key

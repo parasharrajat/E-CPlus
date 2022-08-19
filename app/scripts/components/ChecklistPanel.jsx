@@ -11,10 +11,12 @@ import {
     Avatar,
 } from '@primer/react';
 import {
+    MultiSelectIcon,
     XIcon,
 } from '@primer/octicons-react';
 import Checklist from '../lib/Checklist';
 import helper from '../lib/helper';
+import EmptyContent from './EmptyContent';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
@@ -76,6 +78,11 @@ class ChecklistPanel extends Component {
                     />
                 </Header>
                 <Box pb={3} overflowY="auto" overflowX="hidden" height="100%" flex={1}>
+                    {!this.state.checklists.length && (
+                        <Box p={3} pb={0} height="100%" textAlign="center">
+                            <EmptyContent title="Use this space to track your progress for each task/bug/issue/PR/regression/QA." icon={MultiSelectIcon} />
+                        </Box>
+                    )}
                     {
                         this.state.checklists.map((checklist, index) => (
                             <>
