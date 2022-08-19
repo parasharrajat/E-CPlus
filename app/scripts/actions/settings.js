@@ -1,5 +1,4 @@
 import browser from 'webextension-polyfill';
-// import {expose} from '../lib/env';
 import {STORAGE_KEYS} from './common';
 import cPlusView from './cPlusView';
 
@@ -55,6 +54,18 @@ function removeChecklist(id) {
     });
 }
 
+function updateChecklistRules(rules) {
+    browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
+        const oldData = data[STORAGE_KEYS.SETTINGS];
+        browser.storage.local.set({
+            [STORAGE_KEYS.SETTINGS]: {
+                ...oldData,
+                checklistRules: rules,
+            },
+        });
+    });
+}
+
 function clear() {
     browser.storage.local.clear();
 }
@@ -62,5 +73,5 @@ function clear() {
 // expose(clear);
 
 export default {
-    toggleCPlusView, addChecklist, updateChecklist, removeChecklist,
+    toggleCPlusView, addChecklist, updateChecklist, removeChecklist, updateChecklistRules,
 };
