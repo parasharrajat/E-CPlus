@@ -1,3 +1,5 @@
+import browser from 'webextension-polyfill';
+
 const urlCache = {};
 
 async function getGhTitle(link) {
@@ -45,7 +47,9 @@ function isProposalArrovedComment(node) {
     const hasEmojies = Array.from(contentNode.querySelectorAll('g-emoji')).reduce((final, emojiNode) => final + emojiNode.getAttribute('alias'), '') === 'ribboneyesribbon';
     return hasEmojies && contentNode.textContent.trim().toLowerCase().includes('c+ reviewed');
 }
-
+function getAsset(path) {
+    return browser.runtime.getURL(path);
+}
 export default {
-    getGhTitle, isCommentProposal, isAutoAssignmentComment, isProposalArrovedComment, isUserAssignedComment,
+    getGhTitle, isCommentProposal, isAutoAssignmentComment, isProposalArrovedComment, isUserAssignedComment, getAsset,
 };

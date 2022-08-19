@@ -1,4 +1,4 @@
-import Browser from 'webextension-polyfill';
+import browser from 'webextension-polyfill';
 import {NOTE_TYPE, sendDataToBG, STORAGE_KEYS} from './common';
 
 export function getActiveIssueIDFromURL() {
@@ -48,7 +48,7 @@ export async function getProposalComments() {
 }
 
 export function removeProposalNote(note) {
-    Browser.storage.local.remove(`${STORAGE_KEYS.NOTE}${note.issue}_${STORAGE_KEYS.PROPOSAL_COMMENT}${note.commentID}`);
+    browser.storage.local.remove(`${STORAGE_KEYS.NOTE}${note.issue}_${STORAGE_KEYS.PROPOSAL_COMMENT}${note.commentID}`);
 }
 
 export function markProposalReviewed(commentID) {

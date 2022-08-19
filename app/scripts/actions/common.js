@@ -1,7 +1,7 @@
-import Browser from 'webextension-polyfill';
+import browser from 'webextension-polyfill';
 
 export function sendDataToBG(data) {
-    return Browser.runtime.sendMessage(data);
+    return browser.runtime.sendMessage(data);
 }
 
 export const ISSUE_SUBSCRIPTION = {

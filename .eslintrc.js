@@ -16,7 +16,9 @@ module.exports = {
     plugins: [
         'react',
     ],
+    ignorePatterns: ['dist/**'],
     rules: {
+        'react/jsx-filename-extension': 'off',
         'react/jsx-indent': ['error', 4],
         'react/jsx-indent-props': ['error', 4],
         'react/destructuring-assignment': ['off', 'always'],

@@ -1,11 +1,11 @@
-import Browser from 'webextension-polyfill';
-import {expose} from '../lib/env';
+import browser from 'webextension-polyfill';
+// import {expose} from '../lib/env';
 import {STORAGE_KEYS} from './common';
 import cPlusView from './cPlusView';
 
 function toggleCPlusView(on) {
-    Browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
-        Browser.storage.local.set({
+    browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
+        browser.storage.local.set({
             [STORAGE_KEYS.SETTINGS]: {...data[STORAGE_KEYS.SETTINGS], cPlusView: !!on},
         });
 
@@ -17,10 +17,50 @@ function toggleCPlusView(on) {
     });
 }
 
-function clear() {
-    Browser.storage.local.clear();
+function addChecklist(checklist) {
+    browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
+        const oldData = data[STORAGE_KEYS.SETTINGS];
+        browser.storage.local.set({
+            [STORAGE_KEYS.SETTINGS]: {
+                ...oldData,
+                checklists: [...(oldData.checklists || []), {...checklist, id: new Date().getTime()}],
+            },
+        });
+    });
 }
 
-expose(clear);
+function updateChecklist(id, checklist) {
+    browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
+        const oldData = data[STORAGE_KEYS.SETTINGS];
+        const checklistIndex = oldData.checklists.findIndex((ck) => ck.id === id);
+        oldData.checklists[checklistIndex] = {...checklist};
+        browser.storage.local.set({
+            [STORAGE_KEYS.SETTINGS]: {
+                ...oldData,
+                checklists: oldData.checklists,
+            },
+        });
+    });
+}
 
-export default {toggleCPlusView};
+function removeChecklist(id) {
+    browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
+        const oldData = data[STORAGE_KEYS.SETTINGS];
+        browser.storage.local.set({
+            [STORAGE_KEYS.SETTINGS]: {
+                ...oldData,
+                checklists: oldData.checklists.filter((ck) => ck.id !== id),
+            },
+        });
+    });
+}
+
+function clear() {
+    browser.storage.local.clear();
+}
+
+// expose(clear);
+
+export default {
+    toggleCPlusView, addChecklist, updateChecklist, removeChecklist,
+};
