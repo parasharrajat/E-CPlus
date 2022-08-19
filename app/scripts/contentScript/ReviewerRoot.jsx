@@ -4,7 +4,7 @@ import {
 } from '@primer/react';
 import AddProposalNoteModal from '../components/AddProposalNoteModal';
 import '../../styles/contentscript.css';
-import {hookReactComponentToDom} from '../lib/domHook';
+import domHook from '../lib/domHook';
 import ProposalActions from '../components/ProposalActions';
 import {proposalModalRef} from '../lib/proposalNoteModal';
 
@@ -103,7 +103,7 @@ class ReviewerRoot extends Component {
                 if (actions) {
                     const timeNode = node.querySelector(`#${node.id}-permalink` || '.timeline-comment-header-text .js-timestamp');
                     const {issueID, commentID} = parseCommentURL(timeNode.href);
-                    const container = hookReactComponentToDom(
+                    const container = domHook(
                         <ProposalActions issueID={issueID} commentID={commentID} />,
                         'expensiContributor-proposalActions',
                     );

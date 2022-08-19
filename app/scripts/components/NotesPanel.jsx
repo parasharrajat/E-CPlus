@@ -11,7 +11,6 @@ import {
     Avatar,
 } from '@primer/react';
 import {
-    BookIcon,
     XIcon,
     ArrowRightIcon,
     TrashIcon,
@@ -20,6 +19,7 @@ import WithStorage from './WithStorage';
 import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
 import TitleLoader from './TitleLoader';
 import {removeProposalNote} from '../actions/issue';
+import helper from '../lib/helper';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
@@ -40,14 +40,16 @@ class NotesPanel extends Component {
         console.debug(this.props);
         return (
             <>
-                <Header sx={{px: 3, py: 2}}>
-                    <Header.Item>
-                        <BookIcon size={34} />
-                        <Text ml={2} fontSize="fontSizes[4]">
+                <Header sx={{
+                    px: 3, py: 2, bg: 'canvas.subtle', color: 'fg.default', fontWeight: 'bold',
+                }}
+                >
+                    <Header.Item full>
+                        <Avatar square size={34} src={helper.getAsset('images/notes.png')} />
+                        <Text ml={2} fontSize={3}>
                             Notes
                         </Text>
                     </Header.Item>
-                    <Box sx={{display: 'flex', flex: 1}} />
                     <IconButton
                         variant="default"
                         sx={{background: 'transparent'}}

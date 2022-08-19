@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import '../../styles/contentscript.css';
 import {
     Avatar,
     Box, NavList, Overlay, Text, themeGet,
@@ -11,12 +10,14 @@ import {
     CopilotIcon,
 } from '@primer/octicons-react';
 import {any} from 'prop-types';
-import Browser from 'webextension-polyfill';
+import browser from 'webextension-polyfill';
 import NotesPanel from '../components/NotesPanel';
 import WithStorage from '../components/WithStorage';
 import {STORAGE_KEYS} from '../actions/common';
 import settings from '../actions/settings';
 import {isDev} from '../lib/env';
+import SettingsPage from '../components/SettingsPage';
+import ChecklistPanel from '../components/ChecklistPanel';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
@@ -78,6 +79,10 @@ class SidebarRoot extends Component {
         switch (navKey) {
         case 'notes':
             return <NotesPanel onClose={this.closePanel} />;
+        case 'settings':
+            return <SettingsPage onClose={this.closePanel} />;
+        case 'checklist':
+            return <ChecklistPanel onClose={this.closePanel} checklists={this.props.settings?.checklists} />;
         default:
             break;
         }
@@ -171,7 +176,7 @@ class SidebarRoot extends Component {
                             </NavList.Item>
                         ))}
                         <NavList.Item as="span" sx={{px: 1}} className="sidebarRoot-nav">
-                            <Avatar size={32} square src={Browser.runtime.getURL('images/icon-main.png')} />
+                            <Avatar size={32} square src={browser.runtime.getURL('images/icon-main.png')} />
                         </NavList.Item>
                     </NavList>
                 </Box>

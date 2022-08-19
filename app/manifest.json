@@ -25,7 +25,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://github.com/Expensify/**/*"
+        "*://github.com/*"
       ],
       "css": [
         "styles/contentscript.css"
