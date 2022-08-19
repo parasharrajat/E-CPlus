@@ -1,11 +1,11 @@
 import {Box, Text} from '@primer/react';
-import {element, string} from 'prop-types';
+import {elementType, string} from 'prop-types';
 import React from 'react';
 
 const propTypes = {
     title: string.isRequired,
     // eslint-disable-next-line react/no-unused-prop-types
-    icon: element.isRequired,
+    icon: elementType.isRequired,
 };
 
 function EmptyContent(props) {

@@ -72,7 +72,6 @@ export default function WithStorage(config) {
                 if (area !== 'local') {
                     return;
                 }
-                console.debug(changes);
                 const propDataChanged = Object.keys(changes).some((keyName) => propNames.some((propName) => {
                     const passedKey = this.getKey(config[propName].key);
                     if (!passedKey) {
