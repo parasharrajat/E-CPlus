@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {
     Avatar,
-    Box, NavList, Overlay, Text, themeGet,
+    Box, NavList, Overlay, Portal, Text, themeGet,
 } from '@primer/react';
 import {
     BookIcon,
@@ -18,6 +18,7 @@ import settings from '../actions/settings';
 import {isDev} from '../lib/env';
 import SettingsPage from '../components/SettingsPage';
 import ChecklistPanel from '../components/ChecklistPanel';
+import helper from '../lib/helper';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
@@ -37,31 +38,27 @@ class SidebarRoot extends Component {
             {
                 key: 'notes',
                 title: 'Notes',
-                icon: BookIcon,
+                icon: helper.getAsset('images/notes.png'),
+            },
+            {
+                key: 'checklist',
+                title: 'Checklist',
+                icon: helper.getAsset('images/checklist.png'),
+
             },
         ];
         this.globalNavs = [
+            {
+                key: 'settings',
+                title: 'Settings',
+                icon: helper.getAsset('images/settings.png'),
+            },
             {
                 key: 'c+view',
                 title: 'C+ View',
                 icon: CopilotIcon,
             },
         ];
-
-        if (isDev()) {
-            this.pageNavs.push(
-                {
-                    key: 'checklist',
-                    title: 'Checklist',
-                    icon: ChecklistIcon,
-                },
-            );
-            this.globalNavs.push({
-                key: 'settings',
-                title: 'Settings',
-                icon: GearIcon,
-            });
-        }
     }
 
     componentWillUnmount() {}
@@ -75,7 +72,7 @@ class SidebarRoot extends Component {
         this.setState({panelVisible: true, panel: nav.key});
     };
 
-    renderNav = (navKey) => {
+    renderNavContent = (navKey) => {
         switch (navKey) {
         case 'notes':
             return <NotesPanel onClose={this.closePanel} />;
@@ -88,11 +85,57 @@ class SidebarRoot extends Component {
         }
     };
 
+    renderNavList = (list) => list.map((nav, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <NavList.Item
+            // eslint-disable-next-line react/no-array-index-key
+            key={`nav${index}`}
+            href="#"
+            onClick={(e) => this.onNavClick(e, nav)}
+            sx={{
+                px: 1,
+                ...(nav.key === 'c+view'
+    && this.props.settings?.cPlusView && {
+                    // color: 'fg.onEmphasis',
+                    bg: 'canvas.inset',
+                    borderWidth: 0,
+                    borderStyle: 'solid',
+                    borderColor: 'sponsors.emphasis',
+                }),
+            }}
+            className={`sidebarRoot-nav ${
+                nav.key === 'c+view' && this.props.settings?.cPlusView
+                    ? 'active'
+                    : ''
+            }`}
+        >
+            <NavList.LeadingVisual sx={{height: 'auto', m: 0, maxWidth: 'auto'}}>
+                {typeof nav.icon === 'string'
+                    ? (
+                        <Avatar src={nav.icon} square size={32} />
+                    )
+                    : (
+                        <nav.icon
+                            size="small"
+                            fill={
+                                nav.key === 'c+view' && this.props.settings?.cPlusView
+                                    ? themeGet('fg.onEmphasis')
+                                    : undefined
+                            }
+                        />
+                    )}
+            </NavList.LeadingVisual>
+            <Text fontSize="small">{nav.title}</Text>
+        </NavList.Item>
+    ));
+
     closePanel = () => {
         this.setState({panel: '', panelVisible: false});
     };
 
     render() {
+        console.debug(this.props.settings?.checklists);
+        this.globalNavs[1].icon = this.props.settings?.cPlusView ? helper.getAsset('images/optimus-prime.png') : CopilotIcon;
         return (
             <>
                 <Box
@@ -104,7 +147,8 @@ class SidebarRoot extends Component {
                     borderStyle="solid"
                     borderTopLeftRadius={2}
                     borderBottomLeftRadius={2}
-                    bg="canvas.default"
+                    bg="canvas.subtle"
+                    boxShadow="shadow.medium"
                     sx
                 >
                     <NavList
@@ -122,89 +166,45 @@ class SidebarRoot extends Component {
                             },
                         }}
                     >
-                        {this.pageNavs.map((nav, index) => (
-                            // eslint-disable-next-line react/no-array-index-key
-                            <NavList.Item
-                                // eslint-disable-next-line react/no-array-index-key
-                                key={`nav${index}`}
-                                href="#"
-                                sx={{px: 1}}
-                                onClick={(e) => this.onNavClick(e, nav)}
-                                className="sidebarRoot-nav"
-                            >
-                                <NavList.LeadingVisual sx={{height: 'auto', m: 0}}>
-                                    <nav.icon size="small" />
-                                </NavList.LeadingVisual>
-                                <Text fontSize="small">{nav.title}</Text>
-                            </NavList.Item>
-                        ))}
+                        {this.renderNavList(this.pageNavs)}
                         <NavList.Divider />
-                        {this.globalNavs.map((nav, index) => (
-                            // eslint-disable-next-line react/no-array-index-key
-                            <NavList.Item
-                                // eslint-disable-next-line react/no-array-index-key
-                                key={`nav${index}`}
-                                href="#"
-                                onClick={(e) => this.onNavClick(e, nav)}
-                                sx={{
-                                    px: 1,
-                                    ...(nav.key === 'c+view'
-                    && this.props.settings?.cPlusView && {
-                                        bg: 'sponsors.emphasis',
-                                        color: 'fg.onEmphasis',
-                                        border: 'border.muted',
-                                        borderColor: 'sponsors.muted',
-                                    }),
-                                }}
-                                className={`sidebarRoot-nav ${
-                                    nav.key === 'c+view' && this.props.settings?.cPlusView
-                                        ? 'active'
-                                        : ''
-                                }`}
-                            >
-                                <NavList.LeadingVisual sx={{height: 'auto', m: 0}}>
-                                    <nav.icon
-                                        size="small"
-                                        fill={
-                                            nav.key === 'c+view' && this.props.settings?.cPlusView
-                                                ? themeGet('fg.onEmphasis')
-                                                : undefined
-                                        }
-                                    />
-                                </NavList.LeadingVisual>
-                                <Text fontSize="small">{nav.title}</Text>
-                            </NavList.Item>
-                        ))}
+                        {this.renderNavList(this.globalNavs)}
                         <NavList.Item as="span" sx={{px: 1}} className="sidebarRoot-nav">
                             <Avatar size={32} square src={browser.runtime.getURL('images/icon-main.png')} />
                         </NavList.Item>
                     </NavList>
                 </Box>
-                {this.state.panelVisible && (
-                    <Overlay
-                        returnFocusRef={this.sidebarRef}
-                        onEscape={this.closePanel}
-                        onClickOutside={this.closePanel}
-                    >
-                        <Box
-                            className={`sidebarRoot-panel ${
-                                this.state.panelVisible ? 'visible' : ''
-                            }`}
-                            borderColor="border.default"
-                            borderWidth={1}
-                            borderRightWidth={0}
-                            borderStyle="solid"
-                            borderRadius={0}
-                            width={410}
-                            height="100%"
-                            bg="canvas.default"
-                            display="flex"
-                            flexDirection="column"
+                <Portal>
+                    {this.state.panelVisible && (
+                        <Overlay
+                            returnFocusRef={this.sidebarRef}
+                            onEscape={this.closePanel}
+                            onClickOutside={this.closePanel}
+                            sx={{
+                                zIndex: 100000000001,
+                            }}
                         >
-                            {this.renderNav(this.state.panel)}
-                        </Box>
-                    </Overlay>
-                )}
+                            <Box
+                                className={`sidebarRoot-panel ${
+                                    this.state.panelVisible ? 'visible' : ''
+                                }`}
+                                borderColor="border.default"
+                                borderWidth={1}
+                                borderRightWidth={0}
+                                borderStyle="solid"
+                                borderRadius={0}
+                                width={410}
+                                height="100%"
+                                bg="canvas.default"
+                                display="flex"
+                                flexDirection="column"
+                                boxShadow="shadow.large"
+                            >
+                                {this.renderNavContent(this.state.panel)}
+                            </Box>
+                        </Overlay>
+                    )}
+                </Portal>
             </>
         );
     }

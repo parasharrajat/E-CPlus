@@ -23,7 +23,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-    checklists: {},
+    checklists: [],
 };
 class ChecklistPanel extends Component {
     constructor(props) {

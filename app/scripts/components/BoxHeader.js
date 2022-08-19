@@ -11,7 +11,7 @@ const propTypes = {
 function BoxHeader(props) {
     return (
         <Box display="flex" justifyContent="space-between" alignItems="center" p={2}>
-            <Text>{props.title}</Text>
+            <Text fontSize={2} fontWeight={600}>{props.title}</Text>
             <CloseButton onClick={props.onCloseClick} />
         </Box>
     );

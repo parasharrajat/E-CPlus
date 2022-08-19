@@ -52,7 +52,7 @@ class ChecklistForm extends Component {
                 borderRadius={2}
             >
                 <BoxHeader
-                    title="Add new"
+                    title={this.props.checklist?.id ? 'Edit Checklist' : 'Add new'}
                     onCloseClick={this.props.hideCheckListForm}
                 />
                 <FormControl sx={{display: 'flex'}}>

@@ -8,6 +8,7 @@ import {
     ActionList,
     Heading,
     Avatar,
+    Button,
 } from '@primer/react';
 import {
     XIcon,
@@ -81,6 +82,7 @@ class SeetingsPage extends Component {
                                     <ActionList.Item
                                         // eslint-disable-next-line react/no-array-index-key
                                         key={`checklist_${index}`}
+                                        sx={{m: 0, width: '100%'}}
                                         onSelect={() => this.showCheckListForm(checklist.id)}
                                     >
                                         {checklist.name}
@@ -104,12 +106,10 @@ class SeetingsPage extends Component {
                             <>
                                 <ActionList.Divider />
                                 <ActionList.Item
-                                    sx={{textAlign: 'center', mt: 2}}
+                                    sx={{textAlign: 'center', mt: 2, p: 0}}
                                     onSelect={() => this.showCheckListForm()}
                                 >
-                                    <PlusIcon />
-                                    {' '}
-                                    Add new
+                                    <Button sx={{width: '100%', display: 'flex', justifyContent: 'center'}} leadingIcon={PlusIcon}> Add new</Button>
                                 </ActionList.Item>
                             </>
                         )}
