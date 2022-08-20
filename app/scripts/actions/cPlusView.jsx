@@ -18,25 +18,26 @@ function showComment(element) {
 function hideExtraComments() {
     // ORDER IS VERY IMPORANT FOR NODE FILTERING
     // BE CAREFUL WHILE MAKING CHNAGES TO THE FOLLOWING RULES
-   let hasPRmergedEventReached = false;
+    let hasPRmergedEventReached = false;
 
     document.querySelectorAll('.js-discussion .TimelineItem').forEach((node) => {
         // IF pr is merged then show everything afterwards the merge timeline event
-        if(hasPRmergedEventReached){
+        if (hasPRmergedEventReached) {
             return;
         }
+
         // If Comment is the issue or PR body skip
         if (node.closest('.js-command-palette-issue-body,.js-command-palette-pull-body')) {
             return;
         }
 
         // If this is a part of Requested Changes
-        if(node.closest('[id^="pullrequestreview-"')){
+        if (node.closest('[id^="pullrequestreview-"')) {
             return;
         }
 
         // If Node is a commit timeline event
-        if(node.closest('[data-test-selector="pr-timeline-commits-list"]')){
+        if (node.closest('[data-test-selector="pr-timeline-commits-list"]')) {
             return;
         }
 
@@ -65,7 +66,7 @@ function hideExtraComments() {
         }
 
         // If node is merged commit timeline event
-        if(contentNode.textContent.match(/merged commit[\d\w\s]*into/)){
+        if (contentNode.textContent.match(/merged commit[\d\w\s]*into/)) {
             hasPRmergedEventReached = true;
             return;
         }
@@ -87,7 +88,7 @@ function loadAllComments(parent) {
 
 let GalleryHiddenItems = [];
 
-function organizeGallery(columnCount = 2, horizontal= false) {
+function organizeGallery(columnCount = 2, horizontal = false) {
     const PRbodyEls = document.querySelectorAll('.TimelineItem.js-command-palette-pull-body .edit-comment-hide .comment-body > * ');
     const screenshotHeadingIndex = Array.from(PRbodyEls).findIndex((el) => el.textContent.trim().toLowerCase() === 'screenshots');
 
@@ -99,7 +100,7 @@ function organizeGallery(columnCount = 2, horizontal= false) {
         return;
     }
     const galleryItems = [];
-    screenshotSublist.forEach(el => {
+    screenshotSublist.forEach((el) => {
         if (el.childElementCount === 0 && el.textContent) {
             galleryItems.push({
                 title: el.textContent,
@@ -114,9 +115,10 @@ function organizeGallery(columnCount = 2, horizontal= false) {
     if (!galleryItems.length) {
         return;
     }
-    let gridTemplateColumns = "" ;
-    while(columnCount--){
-        gridTemplateColumns+= "1fr ";
+    let gridTemplateColumns = '';
+    // eslint-disable-next-line no-param-reassign
+    while (columnCount--) {
+        gridTemplateColumns += '1fr ';
     }
     const UI = (
         <Box
@@ -126,49 +128,57 @@ function organizeGallery(columnCount = 2, horizontal= false) {
                 overflowX: 'auto',
                 width: '85vw',
                 bg: 'canvas.default',
-                border: `1px solid rgba(0,0,0,0.18)`,
+                border: '1px solid rgba(0,0,0,0.18)',
                 borderRadius: 2,
                 boxShadow: '0 0 19px 14px rgb(0 0 0 / 4%)',
                 left: '-10vw',
                 alignItems: 'center',
                 display: 'flex',
-            }: undefined}>
+            } : undefined}
+        >
 
-            <Box display="grid" gridTemplateColumns={gridTemplateColumns} gridGap="1px" sx={horizontal ?{
-                width: `100%`,
-                display: 'flex',
-                position: `absolute`,
-                margin: `-200px`,
-                bg:`canvas.default`,
-                zIndex: `222`,
-            }: undefined}>
-                {galleryItems.map(item => {
-                    return item.assets.map(asset => (
-                        <Box  borderWidth={0} boxShadow="0 0 0 1px #d0d7de">
-                            <Box bg="canvas.subtle" borderColor="border.default" borderWidth={0} borderBottomWidth={1} borderStyle="solid" textAlign="center">{item.title}</Box>
-                            <Box p={3} dangerouslySetInnerHTML={{__html:asset.outerHTML}} maxHeight={400} display="flex" alignContent="stretch"></Box>
-                        </Box>
-                    ))
-                })}
+            <Box
+                display="grid"
+                gridTemplateColumns={gridTemplateColumns}
+                gridGap="1px"
+                sx={horizontal ? {
+                    width: '100%',
+                    display: 'flex',
+                    position: 'absolute',
+                    margin: '-200px',
+                    bg: 'canvas.default',
+                    zIndex: '222',
+                } : undefined}
+            >
+                {galleryItems.map((item) => item.assets.map((asset) => (
+                    <Box borderWidth={0} boxShadow="0 0 0 1px #d0d7de">
+                        <Box bg="canvas.subtle" borderColor="border.default" borderWidth={0} borderBottomWidth={1} borderStyle="solid" textAlign="center">{item.title}</Box>
+                        <Box p={3} dangerouslySetInnerHTML={{__html: asset.outerHTML}} maxHeight={400} display="flex" alignContent="stretch" />
+                    </Box>
+                )))}
             </Box>
         </Box>
     );
 
     const container = domHook(UI, 'expensiContributor-gallery');
     Array.from(PRbodyEls)[screenshotHeadingIndex].after(container);
-    Array.from(PRbodyEls).slice(screenshotHeadingIndex + 1).forEach(el => el.hidden = true);
-    return {
-        hiddenItems:  Array.from(PRbodyEls).slice(screenshotHeadingIndex + 1),
-    }
+    // eslint-disable-next-line no-param-reassign
+    Array.from(PRbodyEls).slice(screenshotHeadingIndex + 1).forEach((el) => el.hidden = true);
+    return Array.from(PRbodyEls).slice(screenshotHeadingIndex + 1);
 }
 
-function resetGallery(){
-    GalleryHiddenItems.forEach(el => el.hidden = false);
+function resetGallery() {
+    // eslint-disable-next-line no-param-reassign
+    GalleryHiddenItems.forEach((el) => el.hidden = false);
     document.querySelector('#expensiContributor-gallery').remove();
+    GalleryHiddenItems = [];
 }
 
 function on() {
-    GalleryHiddenItems = organizeGallery().hiddenItems;
+    const hiddenItems = organizeGallery();
+    if (hiddenItems && hiddenItems.length) {
+        GalleryHiddenItems = hiddenItems;
+    }
     loadAllComments(document);
     hideExtraComments();
 }
