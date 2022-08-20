@@ -40,33 +40,8 @@ class SeetingsPage extends Component {
         super(props);
         this.state = {
             pageTypes: [
-                {
-                    id: 'issues',
-                    title: 'Issues',
-                    url: '/issues',
-                    selected: this.getSavedRule('issues'),
-                    filter: '',
-                    isOpen: false,
-                    checklists: this.getItems(''),
-                },
-                {
-                    id: 'pr',
-                    title: 'Pull Request',
-                    url: '/pull',
-                    selected: this.getSavedRule('pr'),
-                    filter: '',
-                    isOpen: false,
-                    checklists: this.getItems(''),
-                },
-                {
-                    id: 'issue-list',
-                    title: 'Issue List',
-                    url: '/pull',
-                    selected: this.getSavedRule('issue-list'),
-                    filter: '',
-                    isOpen: false,
-                    checklists: this.getItems(''),
-                },
+                this.createPageType('issues', 'Issues', '/issues'),
+                this.createPageType('pr', 'Pull Request', '/pull'),
             ],
         };
     }
@@ -75,37 +50,27 @@ class SeetingsPage extends Component {
         if (!_.isEqual(prevProps.settings.checklists, this.props.settings.checklists)) {
             this.setState({
                 pageTypes: [
-                    {
-                        id: 'issues',
-                        title: 'Issues',
-                        url: '/issues',
-                        selected: this.getSavedRule('issues'),
-                        filter: '',
-                        isOpen: false,
-                        checklists: this.getItems(''),
-                    },
-                    {
-                        id: 'pr',
-                        title: 'Pull Request',
-                        url: '/pull',
-                        selected: this.getSavedRule('pr'),
-                        filter: '',
-                        isOpen: false,
-                        checklists: this.getItems(''),
-                    },
-                    {
-                        id: 'issue-list',
-                        title: 'Issue List',
-                        url: '/pull',
-                        selected: this.getSavedRule('issue-list'),
-                        filter: '',
-                        isOpen: false,
-                        checklists: this.getItems(''),
-                    },
+                    this.createPageType('issues', 'Issues', '/issues'),
+                    this.createPageType('pr', 'Pull Request', '/pull'),
                 ],
             });
         }
     }
+
+    createPageType = (id, title, url) => {
+        const items = this.getItems('');
+        const savedItems = this.getSavedRule(id);
+        const selected = items.filter((item) => savedItems.find((it) => it.id === item.id));
+        return {
+            id,
+            title,
+            url,
+            selected,
+            filter: '',
+            isOpen: false,
+            checklists: items,
+        };
+    };
 
     updatePageCheckLists = (index, field, value) => {
         this.setState((prevState) => {
@@ -146,6 +111,7 @@ class SeetingsPage extends Component {
     };
 
     render() {
+        console.debug(this.state.pageTypes);
         return (
             <>
                 <Header sx={{

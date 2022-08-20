@@ -75,7 +75,7 @@ class SidebarRoot extends Component {
         case 'settings':
             return <SettingsPage onClose={this.closePanel} />;
         case 'checklist':
-            return <ChecklistPanel onClose={this.closePanel} checklists={this.props.settings?.checklists} />;
+            return <ChecklistPanel onClose={this.closePanel} />;
         default:
             break;
         }

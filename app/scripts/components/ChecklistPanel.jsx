@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {
     Text,
@@ -27,13 +27,13 @@ import {STORAGE_KEYS} from '../actions/common';
 const propTypes = {
     onClose: PropTypes.func.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    checklists: PropTypes.any,
+    settings: PropTypes.any,
     // eslint-disable-next-line react/forbid-prop-types
     checklistData: PropTypes.array,
 };
 
 const defaultProps = {
-    checklists: [],
+    settings: {},
     checklistData: [],
 };
 class ChecklistPanel extends Component {
@@ -51,14 +51,17 @@ class ChecklistPanel extends Component {
     }
 
     getFreshCheckListData() {
-        return this.props.checklists.map((ck) => {
-            const storedChecklist = this.props.checklistData?.find((storedCk) => storedCk.id === ck.id) || {};
+        const data = this.props.settings?.checklists
+            .filter((ck) => Checklist.checklistPageFilter(ck, this.props.settings?.checklistRules))
+            .map((ck) => {
+                const storedChecklist = this.props.checklistData?.find((storedCk) => storedCk.id === ck.id) || {};
 
-            // Creating a unique prefix for each instance of checklist is necessary to cause the list update when new data is created.
-            return {
-                ...ck, html: Checklist.parseChecklistMD(ck.content), ...storedChecklist, prefix: new Date().getTime(),
-            };
-        });
+                // Creating a unique prefix for each instance of checklist is necessary to cause the list update when new data is created.
+                return {
+                    ...ck, html: Checklist.parseChecklistMD(ck.content), ...storedChecklist, prefix: new Date().getTime(),
+                };
+            });
+        return data || [];
     }
 
     updateChecklist = (item, checked, checklistID) => {
@@ -124,7 +127,8 @@ class ChecklistPanel extends Component {
                     )}
                     {
                         this.state.checklists.map((checklist, index) => (
-                            <>
+                            // eslint-disable-next-line react/no-array-index-key
+                            <Fragment key={`checklist_render${index}`}>
                                 <Header sx={{
                                     py: 2, px: 3, position: 'sticky', top: 0, zIndex: 1, bg: 'canvas.default', color: 'fg.default',
                                 }}
@@ -150,7 +154,7 @@ class ChecklistPanel extends Component {
                                 <form>
                                     {this.renderChecklist(checklist.id, checklist.html, 1, checklist.prefix)}
                                 </form>
-                            </>
+                            </Fragment>
                         ))
                     }
 
@@ -164,6 +168,9 @@ ChecklistPanel.propTypes = propTypes;
 ChecklistPanel.defaultProps = defaultProps;
 
 export default WithStorage({
+    settings: {
+        key: STORAGE_KEYS.SETTINGS,
+    },
     checklistData: {
         // eslint-disable-next-line no-restricted-globals
         key: `${STORAGE_KEYS.PAGE_CHECKLIST}${location.origin}${location.pathname}`,

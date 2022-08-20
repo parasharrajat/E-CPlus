@@ -66,12 +66,6 @@ function updateChecklistRules(rules) {
     });
 }
 
-function clear() {
-    browser.storage.local.clear();
-}
-
-// expose(clear);
-
 export default {
     toggleCPlusView, addChecklist, updateChecklist, removeChecklist, updateChecklistRules,
 };
