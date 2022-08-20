@@ -1,4 +1,10 @@
+import React from 'react';
+import {CheckIcon, XIcon} from '@primer/octicons-react';
+import {
+    Box, Label, LabelGroup, StyledOcticon,
+} from '@primer/react';
 import browser from 'webextension-polyfill';
+import domHook from './domHook';
 
 const urlCache = {
     get: (key) => {
@@ -89,6 +95,55 @@ function isTurboEnabled() {
     return !!document.querySelector('meta[name="turbo-cache-control"], meta[name="turbo-visit-control"], meta[name="turbo-root"]');
 }
 
+function markPRChecklistStatus() {
+    const PRbodyEls = document.querySelectorAll('.TimelineItem.js-command-palette-pull-body .edit-comment-hide .comment-body > * ');
+    const [checkListheading] = Array.from(PRbodyEls).filter((el) => el.textContent.trim().toLowerCase() === 'contributor (pr author) checklist');
+
+    if (!checkListheading) {
+        return;
+    }
+    const sublist = checkListheading.nextElementSibling.closest('ul.contains-task-list');
+    if (!sublist) {
+        return;
+    }
+    const allCheckItems = sublist.querySelectorAll('input[type="checkbox"]');
+    const hasAllCheckboxesMarkedOnPR = !Array.from(allCheckItems).some((el) => !el.checked);
+
+    const UI = (
+        <Box flexDirection="row">
+            <LabelGroup>
+                {
+                    !hasAllCheckboxesMarkedOnPR && (
+                        <Label sx={{
+                            color: 'fg.onEmphasis', bg: 'danger.emphasis', p: 2,
+                        }}
+                        >
+                            <StyledOcticon icon={XIcon} size={16} color="fg.onEmphasis" sx={{mr: 2}} />
+                            Incomplete PR Checklist
+                        </Label>
+                    )
+                }
+                {
+                    hasAllCheckboxesMarkedOnPR && (
+                        <Label sx={{
+                            color: 'fg.onEmphasis', bg: 'success.emphasis', p: 2,
+                        }}
+                        >
+                            <StyledOcticon icon={CheckIcon} size={16} color="fg.onEmphasis" sx={{mr: 2}} />
+                            PR Checklist Completed
+                        </Label>
+                    )
+                }
+            </LabelGroup>
+        </Box>
+    );
+
+    const container = domHook(UI, 'expensiContributor-headerTitleRoot1');
+    document.querySelector('#partial-discussion-header .gh-header-show').prepend(container);
+    const stickycontainer2 = domHook(UI, 'expensiContributor-headerTitleRoot2');
+    document.querySelector('#partial-discussion-header .gh-header-sticky > div>div>div').append(stickycontainer2);
+}
+
 function getPageType() {
     switch (true) {
         case /issues$/.test(window.location.pathname): return 'issues-list';
@@ -105,6 +160,7 @@ export default {
     isAutoAssignmentComment,
     isProposalArrovedComment,
     isUserAssignedComment,
+    markPRChecklistStatus,
     getAsset,
     isTurboEnabled,
     getPageType,

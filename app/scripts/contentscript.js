@@ -22,4 +22,3 @@ init();
 Navigation.onPageNavigationListener(init);
 Session.registerSyncHandler(Helper.syncUrlCache);
 Session.syncInit();
-Session.syncTab();

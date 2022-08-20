@@ -42,6 +42,7 @@ class ReviewerRoot extends Component {
         ];
         this.proposalCommentsTagged = [];
         this.findProposalCommentsAndFeatures = this.findProposalCommentsAndFeatures.bind(this);
+        this.pageType = Helper.getPageType();
     }
 
     componentDidMount() {
@@ -72,10 +73,16 @@ class ReviewerRoot extends Component {
                     });
                 },
             };
+
+            if(this.pageType === 'pr'){
+                Helper.markPRChecklistStatus();
+            }
+
         } catch (e) {
             console.error(e);
         }
     }
+
 
     componentWillUnmount() {
         this.observer.disconnect();
