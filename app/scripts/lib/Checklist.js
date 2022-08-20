@@ -73,14 +73,16 @@ function checklistPageFilter(checklist, checklistRules) {
     // eslint-disable-next-line no-restricted-globals
     const {pathname} = location;
 
-    // If there are no checklistRules then allow all checklists for the page
-    if (!checklistRules || !checklistRules.length) {
+    const allChecklistForRules = checklistRules?.map((ckRule) => ckRule.selected).flat();
+
+    // If there are no checklist selected for any checklistRule then allow all checklists for the page
+    if (!allChecklistForRules || !allChecklistForRules.length) {
         return true;
     }
 
     // remove '/Expensify/App'
-    const activeRulesForPage = checklistRules.filter((ck) => pathname.slice(14).startsWith(ck.url));
-    const checklistToShow = activeRulesForPage.map((ckRule) => ckRule.selected).flat();
+    const activeRulesForPage = checklistRules?.filter((ck) => pathname.slice(14).startsWith(ck.url));
+    const checklistToShow = activeRulesForPage?.map((ckRule) => ckRule.selected).flat();
 
     return checklistToShow.some((ck) => ck.id === checklist.id);
 }
