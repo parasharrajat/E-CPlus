@@ -21,7 +21,7 @@ async function getGhTitle(link) {
 function isCommentProposal(node) {
     const contentNode = node.querySelector('.edit-comment-hide');
     if (contentNode) {
-        return contentNode.textContent.trim().match(/^proposal/gi);
+        return contentNode.textContent.trim().split('\n')[0].match(/proposal/i);
     }
 }
 
@@ -50,6 +50,17 @@ function isProposalArrovedComment(node) {
 function getAsset(path) {
     return browser.runtime.getURL(path);
 }
+
+function isTurboEnabled() {
+    return !!document.querySelector('meta[name="turbo-cache-control"], meta[name="turbo-visit-control"], meta[name="turbo-root"]');
+}
+
 export default {
-    getGhTitle, isCommentProposal, isAutoAssignmentComment, isProposalArrovedComment, isUserAssignedComment, getAsset,
+    getGhTitle,
+    isCommentProposal,
+    isAutoAssignmentComment,
+    isProposalArrovedComment,
+    isUserAssignedComment,
+    getAsset,
+    isTurboEnabled,
 };

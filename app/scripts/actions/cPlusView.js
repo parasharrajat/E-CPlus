@@ -51,7 +51,7 @@ function loadAllComments(parent) {
     if (!paginationContainer) {
         return Promise.resolve();
     }
-    return Navigation.triggerPaginate(paginationContainer).then(() => {
+    return Navigation.triggerCommentsPagination(paginationContainer).then(() => {
         hideExtraComments();
         return loadAllComments(paginationContainer);
     });
