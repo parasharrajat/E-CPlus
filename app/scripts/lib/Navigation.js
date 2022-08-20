@@ -1,4 +1,9 @@
-function onPageNavigationListener(navigationHandler) {
+import _ from 'underscore';
+import helper from './helper';
+
+const navigationListenerAbort = new AbortController();
+
+function legacyNavigationListener(navigationHandler) {
     // Select the node that will be observed for mutations
     const targetNode = document.querySelector('head title');
     const config = {characterData: true};
@@ -16,16 +21,22 @@ function onPageNavigationListener(navigationHandler) {
 
     // Start observing the target node for configured mutations
     observer.observe(targetNode, config);
-
-    return () => observer.disconnect();
+    navigationListenerAbort.signal.addEventListener('abort', () => observer.disconnect());
 }
 
-function triggerPaginate(paginateContainer) {
+/**
+ * @param {Function} callback
+ */
+function listenForTurboNavigation(callback) {
+    window.addEventListener('turbo:render', _.debounce(callback, 300), {signal: navigationListenerAbort.signal});
+}
+
+function triggerCommentsPagination(paginateContainer) {
     console.debug('Pagination starts for', paginateContainer);
     return new Promise((resolve) => {
         const config = {childList: true};
         const callback = (mutationList, observer) => {
-        // eslint-disable-next-line no-restricted-syntax
+            // eslint-disable-next-line no-restricted-syntax
             for (const mutation of mutationList) {
                 if (mutation.type === 'childList' && mutation.addedNodes.length) {
                     observer.disconnect();
@@ -47,8 +58,20 @@ function triggerPaginate(paginateContainer) {
         }
     });
 }
+function onPageNavigationListener(navigationHandler) {
+    if (helper.isTurboEnabled()) {
+        listenForTurboNavigation(navigationHandler);
+    } else {
+        legacyNavigationListener(navigationHandler);
+    }
+}
+
+function stopPageNavigationListener() {
+    navigationListenerAbort.abort();
+}
 
 export default {
+    triggerCommentsPagination,
     onPageNavigationListener,
-    triggerPaginate,
+    stopPageNavigationListener,
 };
