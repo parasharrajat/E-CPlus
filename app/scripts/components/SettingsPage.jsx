@@ -33,7 +33,10 @@ const propTypes = {
 };
 
 const defaultProps = {
-    settings: {},
+    settings: {
+        checklists: [],
+        checklistRules: [],
+    },
 };
 class SeetingsPage extends Component {
     constructor(props) {
@@ -101,17 +104,20 @@ class SeetingsPage extends Component {
         settings.removeChecklist(id);
     };
 
-    getItems = (filter) => this.props.settings.checklists
-        .map((ck) => ({id: ck.id, text: ck.name}))
-        .filter((ck) => !filter || !filter.trim() || ck.text.toLowerCase().startsWith(filter.toLowerCase()));
+    getItems = (filter) => {
+        const items = this.props.settings.checklists
+            ?.map((ck) => ({id: ck.id, text: ck.name}))
+            .filter((ck) => !filter || !filter.trim() || ck.text.toLowerCase().startsWith(filter.toLowerCase()));
+        return items || [];
+    };
 
     getSavedRule = (ruleId) => {
         const checklistRule = this.props.settings?.checklistRules?.find((ck) => ck.id === ruleId);
-        return checklistRule.selected || [];
+        return checklistRule?.selected || [];
     };
 
     render() {
-        console.debug(this.state.pageTypes);
+        console.debug(this.props);
         return (
             <>
                 <Header sx={{
@@ -181,37 +187,41 @@ class SeetingsPage extends Component {
                             />
                         )}
                     </ActionList>
-                    <Heading as="h5" sx={{fontSize: 2, mt: 3}}>
-                        Checklist Rendering Rules
-                    </Heading>
-                    {this.state.pageTypes.map((type, index) => (
-                        <FormControl sx={{
-                            py: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                        }}
-                        >
-                            <FormControl.Label sx={{alignSelf: 'center'}}>{type.title}</FormControl.Label>
-                            <SelectPanel
-                                // eslint-disable-next-line react/no-array-index-key
-                                key={`checklist_rule_${index}`}
-                                renderAnchor={({children, ...anchorProps}) => (
-                                    // eslint-disable-next-line react/jsx-props-no-spreading
-                                    <Button trailingIcon={TriangleDownIcon} {...anchorProps} sx={{m: 0}}>
-                                        {children || 'Select Checklists'}
-                                    </Button>
-                                )}
-                                placeholderText="Filter Labels"
-                                open={type.isOpen}
-                                onOpenChange={(state) => this.updatePageCheckLists(index, 'isOpen', state)}
-                                items={type.checklists.filter((ck) => !type.filter || !type.filter.trim() || ck.text.toLowerCase().startsWith(type.filter.toLowerCase()))}
-                                selected={type.selected}
-                                onSelectedChange={(value) => this.updatePageCheckLists(index, 'selected', value)}
-                                onFilterChange={(filter) => this.updatePageCheckLists(index, 'filter', filter)}
-                                showItemDividers
-                                overlayProps={{width: 'small', height: 'xsmall', sx: {zIndex: 100000000000002}}}
-                            />
-                        </FormControl>
+                    {this.props.settings?.checklists && (
+                        <>
+                            <Heading as="h5" sx={{fontSize: 2, mt: 3}}>
+                                Checklist Rendering Rules
+                            </Heading>
+                            {this.state.pageTypes.map((type, index) => (
+                                <FormControl sx={{
+                                    py: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+                                }}
+                                >
+                                    <FormControl.Label sx={{alignSelf: 'center'}}>{type.title}</FormControl.Label>
+                                    <SelectPanel
+                                        // eslint-disable-next-line react/no-array-index-key
+                                        key={`checklist_rule_${index}`}
+                                        renderAnchor={({children, ...anchorProps}) => (
+                                            // eslint-disable-next-line react/jsx-props-no-spreading
+                                            <Button trailingIcon={TriangleDownIcon} {...anchorProps} sx={{m: 0}}>
+                                                {children || 'Select Checklists'}
+                                            </Button>
+                                        )}
+                                        placeholderText="Filter Labels"
+                                        open={type.isOpen}
+                                        onOpenChange={(state) => this.updatePageCheckLists(index, 'isOpen', state)}
+                                        items={type.checklists.filter((ck) => !type.filter || !type.filter.trim() || ck.text.toLowerCase().startsWith(type.filter.toLowerCase()))}
+                                        selected={type.selected}
+                                        onSelectedChange={(value) => this.updatePageCheckLists(index, 'selected', value)}
+                                        onFilterChange={(filter) => this.updatePageCheckLists(index, 'filter', filter)}
+                                        showItemDividers
+                                        overlayProps={{width: 'small', height: 'xsmall', sx: {zIndex: 100000000000002}}}
+                                    />
+                                </FormControl>
 
-                    ))}
+                            ))}
+                        </>
+                    )}
                 </Box>
             </>
         );

@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import {
     Avatar,
-    Box, NavList, Overlay, Portal, Text, themeGet,
+    Box,
+    NavList,
+    Overlay,
+    Portal,
+    Text,
+    themeGet,
 } from '@primer/react';
-import {
-    CopilotIcon,
-} from '@primer/octicons-react';
+import {CopilotIcon} from '@primer/octicons-react';
 import {any} from 'prop-types';
 import browser from 'webextension-polyfill';
 import NotesPanel from '../components/NotesPanel';
@@ -22,7 +25,10 @@ const propTypes = {
 };
 
 const defaultProps = {
-    settings: {},
+    settings: {
+        checklists: [],
+        checklistRules: [],
+    },
 };
 class SidebarRoot extends Component {
     constructor(props) {
@@ -40,7 +46,6 @@ class SidebarRoot extends Component {
                 key: 'checklist',
                 title: 'Checklist',
                 icon: helper.getAsset('images/checklist.png'),
-
             },
         ];
         this.globalNavs = [
@@ -91,7 +96,7 @@ class SidebarRoot extends Component {
             sx={{
                 px: 1,
                 ...(nav.key === 'c+view'
-    && this.props.settings?.cPlusView && {
+            && this.props.settings?.cPlusView && {
                     // color: 'fg.onEmphasis',
                     bg: 'canvas.inset',
                     borderWidth: 0,
@@ -100,26 +105,22 @@ class SidebarRoot extends Component {
                 }),
             }}
             className={`sidebarRoot-nav ${
-                nav.key === 'c+view' && this.props.settings?.cPlusView
-                    ? 'active'
-                    : ''
+                nav.key === 'c+view' && this.props.settings?.cPlusView ? 'active' : ''
             }`}
         >
             <NavList.LeadingVisual sx={{height: 'auto', m: 0, maxWidth: 'auto'}}>
-                {typeof nav.icon === 'string'
-                    ? (
-                        <Avatar src={nav.icon} square size={32} />
-                    )
-                    : (
-                        <nav.icon
-                            size="small"
-                            fill={
-                                nav.key === 'c+view' && this.props.settings?.cPlusView
-                                    ? themeGet('fg.onEmphasis')
-                                    : undefined
-                            }
-                        />
-                    )}
+                {typeof nav.icon === 'string' ? (
+                    <Avatar src={nav.icon} square size={32} />
+                ) : (
+                    <nav.icon
+                        size="small"
+                        fill={
+                            nav.key === 'c+view' && this.props.settings?.cPlusView
+                                ? themeGet('fg.onEmphasis')
+                                : undefined
+                        }
+                    />
+                )}
             </NavList.LeadingVisual>
             <Text fontSize="small">{nav.title}</Text>
         </NavList.Item>
@@ -130,12 +131,13 @@ class SidebarRoot extends Component {
     };
 
     render() {
-        console.debug(this.props.settings?.checklists);
-        this.globalNavs[1].icon = this.props.settings?.cPlusView ? helper.getAsset('images/optimus-prime.png') : CopilotIcon;
+        this.globalNavs[1].icon = this.props.settings?.cPlusView
+            ? helper.getAsset('images/optimus-prime.png')
+            : CopilotIcon;
         return (
             <>
                 <Box
-                    ref={(el) => this.sidebarRef = el}
+                    ref={(el) => (this.sidebarRef = el)}
                     className="sidebarRoot-menu"
                     borderColor="border.default"
                     borderWidth={1}
@@ -166,7 +168,11 @@ class SidebarRoot extends Component {
                         <NavList.Divider />
                         {this.renderNavList(this.globalNavs)}
                         <NavList.Item as="span" sx={{px: 1}} className="sidebarRoot-nav">
-                            <Avatar size={32} square src={browser.runtime.getURL('images/icon-main.png')} />
+                            <Avatar
+                                size={32}
+                                square
+                                src={browser.runtime.getURL('images/icon-main.png')}
+                            />
                         </NavList.Item>
                     </NavList>
                 </Box>

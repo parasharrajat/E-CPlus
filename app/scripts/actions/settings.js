@@ -4,8 +4,9 @@ import cPlusView from './cPlusView';
 
 function toggleCPlusView(on) {
     browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
+        const oldData = data[STORAGE_KEYS.SETTINGS] || {};
         browser.storage.local.set({
-            [STORAGE_KEYS.SETTINGS]: {...data[STORAGE_KEYS.SETTINGS], cPlusView: !!on},
+            [STORAGE_KEYS.SETTINGS]: {...oldData, cPlusView: !!on},
         });
 
         if (on) {
@@ -18,7 +19,7 @@ function toggleCPlusView(on) {
 
 function addChecklist(checklist) {
     browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
-        const oldData = data[STORAGE_KEYS.SETTINGS];
+        const oldData = data[STORAGE_KEYS.SETTINGS] || {};
         browser.storage.local.set({
             [STORAGE_KEYS.SETTINGS]: {
                 ...oldData,
@@ -30,7 +31,7 @@ function addChecklist(checklist) {
 
 function updateChecklist(id, checklist) {
     browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
-        const oldData = data[STORAGE_KEYS.SETTINGS];
+        const oldData = data[STORAGE_KEYS.SETTINGS] || {};
         const checklistIndex = oldData.checklists.findIndex((ck) => ck.id === id);
         oldData.checklists[checklistIndex] = {...checklist};
         browser.storage.local.set({
@@ -44,7 +45,7 @@ function updateChecklist(id, checklist) {
 
 function removeChecklist(id) {
     browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
-        const oldData = data[STORAGE_KEYS.SETTINGS];
+        const oldData = data[STORAGE_KEYS.SETTINGS] || {};
         browser.storage.local.set({
             [STORAGE_KEYS.SETTINGS]: {
                 ...oldData,
@@ -56,7 +57,7 @@ function removeChecklist(id) {
 
 function updateChecklistRules(rules) {
     browser.storage.local.get(STORAGE_KEYS.SETTINGS).then((data) => {
-        const oldData = data[STORAGE_KEYS.SETTINGS];
+        const oldData = data[STORAGE_KEYS.SETTINGS] || {};
         browser.storage.local.set({
             [STORAGE_KEYS.SETTINGS]: {
                 ...oldData,

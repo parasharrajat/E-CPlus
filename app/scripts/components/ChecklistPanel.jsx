@@ -33,7 +33,10 @@ const propTypes = {
 };
 
 const defaultProps = {
-    settings: {},
+    settings: {
+        checklists: [],
+        checklistRules: [],
+    },
     checklistData: [],
 };
 class ChecklistPanel extends Component {
@@ -52,7 +55,7 @@ class ChecklistPanel extends Component {
 
     getFreshCheckListData() {
         const data = this.props.settings?.checklists
-            .filter((ck) => Checklist.checklistPageFilter(ck, this.props.settings?.checklistRules))
+            ?.filter((ck) => Checklist.checklistPageFilter(ck, this.props.settings?.checklistRules))
             .map((ck) => {
                 const storedChecklist = this.props.checklistData?.find((storedCk) => storedCk.id === ck.id) || {};
 
