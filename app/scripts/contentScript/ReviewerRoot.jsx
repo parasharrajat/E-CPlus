@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {
-    Box, UnderlineNav, Heading, Text,
+    Box, UnderlineNav, Heading, Text, Avatar,
 } from '@primer/react';
+import browser from 'webextension-polyfill';
 import AddProposalNoteModal from '../components/AddProposalNoteModal';
 import '../../styles/contentscript.css';
 import domHook from '../lib/domHook';
@@ -86,7 +87,10 @@ class ReviewerRoot extends Component {
 
     selectTab = (e, tab) => {
         e.preventDefault();
-        this.setState({selectedTab: tab.key});
+        if (!tab) {
+            return;
+        }
+        this.setState({selectedTab: tab?.key});
     };
 
     findProposalCommentsAndFeatures(nodes) {
@@ -216,8 +220,14 @@ class ReviewerRoot extends Component {
                         borderStyle="solid"
                         borderRadius={2}
                     >
-                        <Heading sx={{fontSize: 3, p: 2}}>ExpensiContributor</Heading>
+                        {/* <Heading sx={{fontSize: 2, p: 2}}>
+                            <Avatar src={helper.getAsset('images/icon-38.png')} size={24} sx={{mr: 2}} />
+                            {browser.runtime.getManifest().short_name}
+                        </Heading> */}
                         <UnderlineNav full>
+                            <UnderlineNav.Link sx={{p: 2, mr: 0, cursor: 'default'}} href="#" onClick={(e) => this.selectTab(e)}>
+                                <Avatar src={helper.getAsset('images/icon-38.png')} size={24} />
+                            </UnderlineNav.Link>
                             {this.tabs.map((tab, index) => (
                             // eslint-disable-next-line react/no-array-index-key
                                 <UnderlineNav.Link key={`tab${index}`} sx={{p: 2}} href="#" selected={this.state.selectedTab === tab.key} onClick={(e) => this.selectTab(e, tab)}>
