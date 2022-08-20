@@ -3,6 +3,7 @@ import browser from 'webextension-polyfill';
 export function sendDataToBG(data) {
     return browser.runtime.sendMessage(data);
 }
+export const BROWSER_EXTENSION_ID = browser.runtime.id;
 
 export const ISSUE_SUBSCRIPTION = {
     PAYMENT: 1,
@@ -23,9 +24,11 @@ export const STORAGE_KEYS = {
 
 export function parseCommentURL(url) {
     // eslint-disable-next-line no-useless-escape
-    const [, issueID, commentID] = /https\:\/\/github\.com\/[^\/]*\/[^\/]*\/issues\/(\d*)\#issuecomment\-(\d*)/.exec(url);
+    const [, pageType, id, commentID] = /https\:\/\/github\.com\/[^\/]*\/[^\/]*\/(issues|pull)\/(\d*)\#issuecomment\-(\d*)/.exec(url);
     return {
-        issueID,
+        pageType,
+        issueID: pageType === 'issues' ? id : undefined,
+        prID: pageType === 'pull' ? id : undefined,
         commentID,
     };
 }

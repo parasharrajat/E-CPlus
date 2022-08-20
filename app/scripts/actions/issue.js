@@ -1,19 +1,19 @@
 import browser from 'webextension-polyfill';
 import {NOTE_TYPE, sendDataToBG, STORAGE_KEYS} from './common';
 
-export function getActiveIssueIDFromURL() {
+export function getActiveIssueIDFromURL(url) {
     switch (true) {
-    case /issues\/\d*\/?$/.text(url.pathname):
-        return /issues\/(\d*)\/?$/.exec(window.location)[1];
-    case /pull\/\d*\/?$/.test(url.pathname):
-        return /pull\/\d*\/?$/.exec(window.location)[1];
-    default: return null;
+        case /issues\/\d*\/?$/.text(url.pathname):
+            return /issues\/(\d*)\/?$/.exec(window.location)[1];
+        case /pull\/\d*\/?$/.test(url.pathname):
+            return /pull\/\d*\/?$/.exec(window.location)[1];
+        default: return null;
     }
 }
 
 export function subscribeToIssue(id, options) {
     return sendDataToBG({
-        end: 'add',
+        op: 'add',
         data: {
             id,
             subsciptions: Object.keys(options).filter((key) => !!options[key]),
@@ -23,7 +23,7 @@ export function subscribeToIssue(id, options) {
 
 export function addProposalNote(commentID, issueID, link, note, userHandle, userAvatar) {
     return sendDataToBG({
-        end: 'add',
+        op: 'add',
         data: {
             noteType: NOTE_TYPE.PROPOSAL,
             id: `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`,
@@ -38,7 +38,7 @@ export function addProposalNote(commentID, issueID, link, note, userHandle, user
 }
 export async function getProposalComments() {
     const response = await sendDataToBG({
-        end: 'get',
+        op: 'get',
         data: {
             id: `${STORAGE_KEYS.PROPOSAL_COMMENT}*`,
         },
@@ -53,7 +53,7 @@ export function removeProposalNote(note) {
 
 export function markProposalReviewed(commentID) {
     return sendDataToBG({
-        end: 'add',
+        op: 'add',
         data: {
             id: `${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`,
             reviewed: true,

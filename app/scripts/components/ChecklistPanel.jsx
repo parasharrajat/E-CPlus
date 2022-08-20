@@ -18,7 +18,7 @@ import {
 } from '@primer/octicons-react';
 import _ from 'underscore';
 import Checklist from '../lib/Checklist';
-import helper from '../lib/helper';
+import Helper from '../lib/Helper';
 import EmptyContent from './EmptyContent';
 import checklistAction from '../actions/checklist';
 import WithStorage from './WithStorage';
@@ -109,7 +109,7 @@ class ChecklistPanel extends Component {
                 }}
                 >
                     <Header.Item full>
-                        <Avatar square size={34} src={helper.getAsset('images/checklist.png')} />
+                        <Avatar square size={34} src={Helper.getAsset('images/checklist.png')} />
                         <Text ml={2} fontSize={3}>
                             Your action list
                         </Text>

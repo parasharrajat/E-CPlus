@@ -20,7 +20,7 @@ import WithStorage from './WithStorage';
 import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
 import TitleLoader from './TitleLoader';
 import {removeProposalNote} from '../actions/issue';
-import helper from '../lib/helper';
+import Helper from '../lib/Helper';
 import EmptyContent from './EmptyContent';
 
 const propTypes = {
@@ -47,7 +47,7 @@ class NotesPanel extends Component {
                 }}
                 >
                     <Header.Item full>
-                        <Avatar square size={34} src={helper.getAsset('images/notes.png')} />
+                        <Avatar square size={34} src={Helper.getAsset('images/notes.png')} />
                         <Text ml={2} fontSize={3}>
                             Notes
                         </Text>
