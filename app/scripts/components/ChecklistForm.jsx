@@ -1,14 +1,22 @@
 import React, {Component} from 'react';
+import {any, func} from 'prop-types';
 import {
     Box,
     FormControl,
     TextInput,
     Textarea,
     Button,
+    Flash,
 } from '@primer/react';
 import BoxHeader from './BoxHeader';
 import settings from '../actions/settings';
 import Checklist from '../lib/Checklist';
+
+const propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    checklist: any.isRequired,
+    hideCheckListForm: func.isRequired,
+};
 
 class ChecklistForm extends Component {
     constructor(props) {
@@ -20,9 +28,16 @@ class ChecklistForm extends Component {
 
     saveCheckList = () => {
         const html = Checklist.parseChecklistMD(this.state.checklistForm.content);
-        if (!this.state.checklistForm.name || !html) {
+        if (!this.state.checklistForm.name.trim() || !this.state.checklistForm.content.trim()) {
             this.setState({
                 checklistFormError: 'Please fill all the fields.',
+            });
+            return;
+        }
+
+        if (!html.length) {
+            this.setState({
+                checklistFormError: 'Please provide valid MD style checklist.',
             });
             return;
         }
@@ -55,6 +70,16 @@ class ChecklistForm extends Component {
                     title={this.props.checklist?.id ? 'Edit Checklist' : 'Add new'}
                     onCloseClick={this.props.hideCheckListForm}
                 />
+                {this.state.checklistFormError && (
+                    <Flash
+                        sx={{
+                            borderRadius: 0, width: '100%', m: 0, p: 2,
+                        }}
+                        variant="danger"
+                    >
+                        {this.state.checklistFormError}
+                    </Flash>
+                )}
                 <FormControl sx={{display: 'flex'}}>
                     <FormControl.Label visuallyHidden>Name</FormControl.Label>
                     <TextInput
@@ -95,4 +120,6 @@ class ChecklistForm extends Component {
         );
     }
 }
+
+ChecklistForm.propTypes = propTypes;
 export default ChecklistForm;

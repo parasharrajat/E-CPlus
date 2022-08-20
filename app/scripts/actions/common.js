@@ -18,6 +18,7 @@ export const STORAGE_KEYS = {
     NOTE: 'note_',
     PROPOSAL_COMMENT: 'proposal_comment_',
     SETTINGS: 'settings_',
+    PAGE_CHECKLIST: 'page_checklist',
 };
 
 export function parseCommentURL(url) {
