@@ -39,7 +39,7 @@ module.exports = {
 
         // Enforce indentation of 4 spaces; the third option parameter was copied from Airbnb:
         // https://github.com/airbnb/javascript/blob/60b96d322277c4c71a21a05caba8eb3320e0e3fa/packages/eslint-config-airbnb-base/rules/style.js#L120-L145
-        indent: ['error', 4],
+        indent: ['error', 4, {SwitchCase: 1}],
 
         // Airbnb didn't want this rule to be enabled even though it complies with their styleguide - so we're adding it
         // https://github.com/airbnb/javascript/pull/1994

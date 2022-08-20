@@ -17,7 +17,7 @@ import {STORAGE_KEYS} from '../actions/common';
 import settings from '../actions/settings';
 import SettingsPage from '../components/SettingsPage';
 import ChecklistPanel from '../components/ChecklistPanel';
-import helper from '../lib/helper';
+import Helper from '../lib/Helper';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
@@ -40,26 +40,29 @@ class SidebarRoot extends Component {
             {
                 key: 'notes',
                 title: 'Notes',
-                icon: helper.getAsset('images/notes.png'),
+                icon: Helper.getAsset('images/notes.png'),
             },
             {
                 key: 'checklist',
                 title: 'Checklist',
-                icon: helper.getAsset('images/checklist.png'),
+                icon: Helper.getAsset('images/checklist.png'),
             },
         ];
         this.globalNavs = [
             {
                 key: 'settings',
                 title: 'Settings',
-                icon: helper.getAsset('images/settings.png'),
+                icon: Helper.getAsset('images/settings.png'),
             },
-            {
+        ];
+        const pageType = Helper.getPageType();
+        if (!pageType.includes('list')) {
+            this.globalNavs.push({
                 key: 'c+view',
                 title: 'C+ View',
                 icon: CopilotIcon,
-            },
-        ];
+            });
+        }
     }
 
     componentWillUnmount() {}
@@ -75,14 +78,14 @@ class SidebarRoot extends Component {
 
     renderNavContent = (navKey) => {
         switch (navKey) {
-        case 'notes':
-            return <NotesPanel onClose={this.closePanel} />;
-        case 'settings':
-            return <SettingsPage onClose={this.closePanel} />;
-        case 'checklist':
-            return <ChecklistPanel onClose={this.closePanel} />;
-        default:
-            break;
+            case 'notes':
+                return <NotesPanel onClose={this.closePanel} />;
+            case 'settings':
+                return <SettingsPage onClose={this.closePanel} />;
+            case 'checklist':
+                return <ChecklistPanel onClose={this.closePanel} />;
+            default:
+                break;
         }
     };
 
@@ -131,9 +134,11 @@ class SidebarRoot extends Component {
     };
 
     render() {
-        this.globalNavs[1].icon = this.props.settings?.cPlusView
-            ? helper.getAsset('images/optimus-prime.png')
-            : CopilotIcon;
+        if (this.globalNavs[1]) {
+            this.globalNavs[1].icon = this.props.settings?.cPlusView
+                ? Helper.getAsset('images/optimus-prime.png')
+                : CopilotIcon;
+        }
         return (
             <>
                 <Box

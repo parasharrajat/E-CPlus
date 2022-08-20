@@ -43,6 +43,7 @@
   "permissions": [
     "activeTab",
     "identity",
-    "storage"
+    "storage",
+    "*://github.com/Expensify/*"
   ]
 }

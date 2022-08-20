@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {
-    Box, UnderlineNav, Heading, Text, Avatar,
+    Box, UnderlineNav, Text, Avatar,
 } from '@primer/react';
-import browser from 'webextension-polyfill';
+import {any} from 'prop-types';
 import AddProposalNoteModal from '../components/AddProposalNoteModal';
 import '../../styles/contentscript.css';
 import domHook from '../lib/domHook';
@@ -12,10 +12,21 @@ import {proposalModalRef} from '../lib/proposalNoteModal';
 import {getActiveIssueIDFromURL, subscribeToIssue} from '../actions/issue';
 import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
 import WithStorage from '../components/WithStorage';
-import helper from '../lib/helper';
+import Helper from '../lib/Helper';
 import cPlusView from '../actions/cPlusView';
 import {isDev} from '../lib/env';
 
+const propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    settings: any,
+};
+
+const defaultProps = {
+    settings: {
+        checklists: [],
+        checklistRules: [],
+    },
+};
 class ReviewerRoot extends Component {
     constructor(props) {
         super(props);
@@ -56,7 +67,9 @@ class ReviewerRoot extends Component {
                     });
                 },
                 hide: () => {
-                    this.setState({addProposalNote: {isVisible: false, link: '', userHandle: null}});
+                    this.setState({
+                        addProposalNote: {isVisible: false, link: '', userHandle: null},
+                    });
                 },
             };
         } catch (e) {
@@ -97,15 +110,18 @@ class ReviewerRoot extends Component {
         Array.from(nodes)
             .filter(
                 (node) => node.id?.includes('issuecomment-')
-                    && !this.proposalCommentsTagged.includes(node.id),
+          && !this.proposalCommentsTagged.includes(node.id),
             )
-            .filter(helper.isCommentProposal)
+            .filter(Helper.isCommentProposal)
             .forEach((node) => {
                 const actions = node.querySelector(
                     '.timeline-comment-header .timeline-comment-actions',
                 );
                 if (actions) {
-                    const timeNode = node.querySelector(`#${node.id}-permalink` || '.timeline-comment-header-text .js-timestamp');
+                    const timeNode = node.querySelector(
+                        `#${node.id}-permalink`
+              || '.timeline-comment-header-text .js-timestamp',
+                    );
                     const {issueID, commentID} = parseCommentURL(timeNode.href);
                     const container = domHook(
                         <ProposalActions issueID={issueID} commentID={commentID} />,
@@ -119,7 +135,7 @@ class ReviewerRoot extends Component {
     }
 
     observeProposalComments() {
-        // Select the node that will be observed for mutations
+    // Select the node that will be observed for mutations
         const targetNode = document.querySelector('.js-discussion');
         const config = {attributes: false, childList: true, subtree: true};
         const callback = (mutationList) => {
@@ -150,56 +166,58 @@ class ReviewerRoot extends Component {
 
     renderTabContent = (tab) => {
         switch (tab) {
-        case 'main': return (
-            <>
-                {this.state.error && (
-                    <p className="flash p-2">{this.state.error}</p>
-                )}
-                <form onSubmit={this.submitForm}>
-                    <p className="card-text">Subscribe the issue to track payment</p>
-                    <div className="form-checkbox">
-                        <label>
-                            <input
-                                type="checkbox"
-                                onChange={(e) => this.saveOptions(1, e.target.checked)}
-                            />
-                            Issue Payment
-                        </label>
-                        <p className="note">
-                            This will let you mark different payment statuses.
-                        </p>
-                    </div>
-                    <div className="form-checkbox">
-                        <label>
-                            <input
-                                type="checkbox"
-                                onChange={(e) => this.saveOptions(2, e.target.checked)}
-                            />
-                            Issue Timeline
-                        </label>
-                        <p className="note">
-                            This will track issue timeline specific to ExpensiContributor.
-                        </p>
-                    </div>
-                    <div className="form-checkbox">
-                        <label>
-                            <input
-                                type="checkbox"
-                                onChange={(e) => this.saveOptions(3, e.target.checked)}
-                            />
-                            PR status
-                        </label>
-                        <p className="note">
-                            This track the PR related acitivity of the issue.
-                        </p>
-                    </div>
-                    <button type="submit" className="btn btn-primary btn-sm">
-                        Subscribe
-                    </button>
-                </form>
-            </>
-        );
-        default: return null;
+            case 'main':
+                return (
+                    <>
+                        {this.state.error && (
+                            <p className="flash p-2">{this.state.error}</p>
+                        )}
+                        <form onSubmit={this.submitForm}>
+                            <p className="card-text">Subscribe the issue to track payment</p>
+                            <div className="form-checkbox">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        onChange={(e) => this.saveOptions(1, e.target.checked)}
+                                    />
+                                    Issue Payment
+                                </label>
+                                <p className="note">
+                                    This will let you mark different payment statuses.
+                                </p>
+                            </div>
+                            <div className="form-checkbox">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        onChange={(e) => this.saveOptions(2, e.target.checked)}
+                                    />
+                                    Issue Timeline
+                                </label>
+                                <p className="note">
+                                    This will track issue timeline specific to ExpensiContributor.
+                                </p>
+                            </div>
+                            <div className="form-checkbox">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        onChange={(e) => this.saveOptions(3, e.target.checked)}
+                                    />
+                                    PR status
+                                </label>
+                                <p className="note">
+                                    This track the PR related acitivity of the issue.
+                                </p>
+                            </div>
+                            <button type="submit" className="btn btn-primary btn-sm">
+                                Subscribe
+                            </button>
+                        </form>
+                    </>
+                );
+            default:
+                return null;
         }
     };
 
@@ -213,7 +231,7 @@ class ReviewerRoot extends Component {
                     userAvatar={this.state.addProposalNote?.userAvatar}
                     onCancel={() => this.setState({addProposalNote: {isVisible: false, link: ''}})}
                 />
-                {isDev() && (
+                {isDev() && Helper.getPageType() === 'issue' && (
                     <Box
                         borderColor="border.default"
                         borderWidth={1}
@@ -225,26 +243,37 @@ class ReviewerRoot extends Component {
                             {browser.runtime.getManifest().short_name}
                         </Heading> */}
                         <UnderlineNav full>
-                            <UnderlineNav.Link sx={{p: 2, mr: 0, cursor: 'default'}} href="#" onClick={(e) => this.selectTab(e)}>
-                                <Avatar src={helper.getAsset('images/icon-38.png')} size={24} />
+                            <UnderlineNav.Link
+                                sx={{p: 2, mr: 0, cursor: 'default'}}
+                                href="#"
+                                onClick={(e) => this.selectTab(e)}
+                            >
+                                <Avatar src={Helper.getAsset('images/icon-38.png')} size={24} />
                             </UnderlineNav.Link>
                             {this.tabs.map((tab, index) => (
-                            // eslint-disable-next-line react/no-array-index-key
-                                <UnderlineNav.Link key={`tab${index}`} sx={{p: 2}} href="#" selected={this.state.selectedTab === tab.key} onClick={(e) => this.selectTab(e, tab)}>
+                                <UnderlineNav.Link
+                                // eslint-disable-next-line react/no-array-index-key
+                                    key={`tab${index}`}
+                                    sx={{p: 2}}
+                                    href="#"
+                                    selected={this.state.selectedTab === tab.key}
+                                    onClick={(e) => this.selectTab(e, tab)}
+                                >
                                     {tab.icon && <tab.icon />}
                                     <Text sx={{ml: tab.icon ? 1 : null}}>{tab.title}</Text>
                                 </UnderlineNav.Link>
                             ))}
                         </UnderlineNav>
-                        <Box p={3}>
-                            {this.renderTabContent(this.state.selectedTab)}
-                        </Box>
+                        <Box p={3}>{this.renderTabContent(this.state.selectedTab)}</Box>
                     </Box>
                 )}
             </>
         );
     }
 }
+
+ReviewerRoot.propTypes = propTypes;
+ReviewerRoot.defaultProps = defaultProps;
 
 export default WithStorage({
     settings: {

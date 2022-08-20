@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import {BROWSER_EXTENSION_ID} from './actions/common';
 
 function saveLocalData(key, newData) {
     return browser.storage.local.set({[key]: newData});
@@ -53,26 +54,54 @@ function responseHandler(actionCallback, sendResponse) {
     }
 }
 
+/**
+ *  As Contentscripts can not talk to each other, we forward the sync request to Other targeted tabs on the app.
+ * @param {any} message
+ * @param {any} currentTab
+ */
+function forwardSyncCall(message, currentTab) {
+    const handler = async (request, sender) => {
+        if (sender.id !== BROWSER_EXTENSION_ID) {
+            return Promise.resolve(new Error('Very Bad!'));
+        }
+        if (request.op !== 'pull' || request.op !== 'push') {
+            return;
+        }
+        const tabs = await browser.tabs.query({url: `${new URL(currentTab.url).origin}/*`});
+        console.debug(currentTab, tabs);
+        tabs
+            .filter((tb) => tb.id !== currentTab.id)
+            .forEach((tab) => {
+                browser.tabs.sendMessage(tab.id, message);
+            });
+    };
+    browser.runtime.onMessage.addListener(handler);
+}
+
 function clientRequestHandler(request, sender, sendResponse) {
     console.debug('Message from the content script:', request);
-    switch (request.end) {
-    case 'add': {
-        const {id} = request.data;
-        delete request.data.id;
-        return responseHandler(() => addRow(id, request.data), sendResponse);
+    if (sender.id !== BROWSER_EXTENSION_ID) {
+        return Promise.resolve(new Error('Very Bad!'));
     }
-    case 'get': {
-        const {id} = request.data;
-        delete request.data.id;
-        return responseHandler(() => get(id), sendResponse);
-    }
-    default: return false;
+    switch (request.op) {
+        case 'add': {
+            const {id} = request.data;
+            delete request.data.id;
+            return responseHandler(() => addRow(id, request.data), sendResponse);
+        }
+        case 'get': {
+            const {id} = request.data;
+            delete request.data.id;
+            return responseHandler(() => get(id), sendResponse);
+        }
+        default: return false;
     }
 }
 
 function setup() {
     localStorage.setItem('mainFile', JSON.stringify({}));
     browser.runtime.onMessage.addListener(clientRequestHandler);
+    forwardSyncCall();
 }
 
 setup();

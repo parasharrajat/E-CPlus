@@ -24,7 +24,7 @@ import WithStorage from './WithStorage';
 import {STORAGE_KEYS} from '../actions/common';
 import ChecklistForm from './ChecklistForm';
 import settings from '../actions/settings';
-import helper from '../lib/helper';
+import Helper from '../lib/Helper';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
@@ -125,7 +125,7 @@ class SeetingsPage extends Component {
                 }}
                 >
                     <Header.Item full>
-                        <Avatar square size={34} src={helper.getAsset('images/settings.png')} />
+                        <Avatar square size={34} src={Helper.getAsset('images/settings.png')} />
                         <Text ml={2} fontSize={3}>
                             Settings
                         </Text>

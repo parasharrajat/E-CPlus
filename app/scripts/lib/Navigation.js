@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import helper from './helper';
+import Helper from './Helper';
 
 const navigationListenerAbort = new AbortController();
 
@@ -59,7 +59,7 @@ function triggerCommentsPagination(paginateContainer) {
     });
 }
 function onPageNavigationListener(navigationHandler) {
-    if (helper.isTurboEnabled()) {
+    if (Helper.isTurboEnabled()) {
         listenForTurboNavigation(navigationHandler);
     } else {
         legacyNavigationListener(navigationHandler);

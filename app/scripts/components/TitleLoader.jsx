@@ -1,7 +1,7 @@
 import {KebabHorizontalIcon} from '@primer/octicons-react';
 import {element, func, string} from 'prop-types';
 import React, {Component} from 'react';
-import helper from '../lib/helper';
+import Helper from '../lib/Helper';
 
 const propTypes = {
     fallback: element,
@@ -21,7 +21,7 @@ class TitleLoader extends Component {
     }
 
     componentDidMount() {
-        helper.getGhTitle(this.props.link).then((title) => this.setState({title, loaded: true}));
+        Helper.getGhTitle(this.props.link).then((title) => this.setState({title, loaded: true}));
     }
 
     render() {

@@ -1,4 +1,4 @@
-import helper from '../lib/helper';
+import Helper from '../lib/Helper';
 import Navigation from '../lib/Navigation';
 
 function hideComment(element) {
@@ -22,19 +22,19 @@ function hideExtraComments() {
         const contentNode = node.querySelector('.TimelineItem-body');
         const isCommentNode = contentNode.closest('.js-comment-container');
 
-        if (isCommentNode && helper.isCommentProposal(contentNode)) {
+        if (isCommentNode && Helper.isCommentProposal(contentNode)) {
             return;
         }
 
-        if (isCommentNode && helper.isAutoAssignmentComment(contentNode)) {
+        if (isCommentNode && Helper.isAutoAssignmentComment(contentNode)) {
             return;
         }
 
-        if (isCommentNode && helper.isProposalArrovedComment(contentNode)) {
+        if (isCommentNode && Helper.isProposalArrovedComment(contentNode)) {
             return;
         }
 
-        if (isCommentNode && helper.isUserAssignedComment(contentNode)) {
+        if (isCommentNode && Helper.isUserAssignedComment(contentNode)) {
             return;
         }
 
