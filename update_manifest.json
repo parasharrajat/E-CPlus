@@ -1,4 +1,16 @@
 {
     "addons": {
+        "{2a855be6-939a-45da-9606-49b77fbb0fba}": {
+            "updates": [
+                {
+                    "version": "v1.3.0",
+                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.3.0/expensify-contributor-plus.v1.3.0.firefox.xpi.zip"
+                },
+                {
+                    "version": "v1.3.1",
+                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.3.1/expensify-contributor-plus.v1.3.1.firefox.xpi.zip"
+                }
+            ]
+        }
     }
 }
