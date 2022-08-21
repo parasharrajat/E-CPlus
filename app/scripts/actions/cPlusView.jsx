@@ -90,7 +90,7 @@ let GalleryHiddenItems = [];
 
 function organizeGallery(columnCount = 2, horizontal = false) {
     const PRbodyEls = document.querySelectorAll('.TimelineItem.js-command-palette-pull-body .edit-comment-hide .comment-body > * ');
-    const screenshotHeadingIndex = Array.from(PRbodyEls).findIndex((el) => el.textContent.trim().toLowerCase() === 'screenshots');
+    const screenshotHeadingIndex = Array.from(PRbodyEls).findIndex((el) => el.textContent.trim().startsWith('screenshots') || el.textContent.trim().endsWith('screenshots'));
 
     if (screenshotHeadingIndex === -1) {
         return;
@@ -170,7 +170,9 @@ function organizeGallery(columnCount = 2, horizontal = false) {
 function resetGallery() {
     // eslint-disable-next-line no-param-reassign
     GalleryHiddenItems.forEach((el) => el.hidden = false);
-    document.querySelector('#expensiContributor-gallery').remove();
+    if (GalleryHiddenItems && GalleryHiddenItems.length) {
+        document.querySelector('#expensiContributor-gallery').remove();
+    }
     GalleryHiddenItems = [];
 }
 
