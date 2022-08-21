@@ -90,7 +90,8 @@ let GalleryHiddenItems = [];
 
 function organizeGallery(columnCount = 2, horizontal = false) {
     const PRbodyEls = document.querySelectorAll('.TimelineItem.js-command-palette-pull-body .edit-comment-hide .comment-body > * ');
-    const screenshotHeadingIndex = Array.from(PRbodyEls).findIndex((el) => el.textContent.trim().startsWith('screenshots') || el.textContent.trim().endsWith('screenshots'));
+    const screenshotHeadingIndex = Array.from(PRbodyEls).findIndex((el) => el.textContent.trim().toLowerCase().startsWith('screenshots')
+    || el.textContent.trim().toLowerCase().endsWith('screenshots'));
 
     if (screenshotHeadingIndex === -1) {
         return;
@@ -104,11 +105,12 @@ function organizeGallery(columnCount = 2, horizontal = false) {
         if (el.childElementCount === 0 && el.textContent) {
             galleryItems.push({
                 title: el.textContent,
+                assets: [],
             });
         } else {
             const lastItem = galleryItems[galleryItems.length - 1];
             if (lastItem) {
-                lastItem.assets = Array.from(el.querySelectorAll('img,video, audio'));
+                lastItem.assets.push(...Array.from(el.querySelectorAll('img,video, audio')));
             }
         }
     });
@@ -153,7 +155,18 @@ function organizeGallery(columnCount = 2, horizontal = false) {
                 {galleryItems.map((item) => item.assets.map((asset) => (
                     <Box borderWidth={0} boxShadow="0 0 0 1px #d0d7de">
                         <Box bg="canvas.subtle" borderColor="border.default" borderWidth={0} borderBottomWidth={1} borderStyle="solid" textAlign="center">{item.title}</Box>
-                        <Box p={3} dangerouslySetInnerHTML={{__html: asset.outerHTML}} maxHeight={400} display="flex" alignContent="stretch" />
+                        <Box
+                            p={3}
+                            sx={{
+                                '>*': {
+                                    objectFit: 'contain',
+                                },
+                            }}
+                            dangerouslySetInnerHTML={{__html: asset.outerHTML}}
+                            maxHeight={400}
+                            display="flex"
+                            alignContent="stretch"
+                        />
                     </Box>
                 )))}
             </Box>
