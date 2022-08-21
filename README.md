@@ -1,7 +1,7 @@
 # ExpensiContributor
   Browser extension for Expensify Contributor Plus. It comes handy in many ways to ease the life of C+.
 
-<a href="#" target="_blank"> <img src="./get-the-addon-firefox.png"></a>
+<a href="https://github.com/parasharrajat/Expensify-CPlus/releases" target="_blank"> <img src="./get-the-addon-firefox.png"></a>
 
  **Features**
 
@@ -19,7 +19,7 @@
 Simply visit for issues/PRs at https://github.com/Expensify/App
 
 ## Installing in your browser
-<a href="#" target="_blank"> <img src="./get-the-addon-firefox.png"></a>
+<a href="https://github.com/parasharrajat/Expensify-CPlus/releases" target="_blank"> <img src="./get-the-addon-firefox.png"></a>
 
 ## Development
 
