@@ -1,5 +1,4 @@
 # ExpensiContributor
----
   Browser extension for Expensify Contributor Plus. It comes handy in many ways to ease the life of C+.
 
  **Features**
