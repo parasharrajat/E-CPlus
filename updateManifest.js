@@ -10,7 +10,7 @@ function addEntryToUpdateManifest() {
     }
     json.addons['{2a855be6-939a-45da-9606-49b77fbb0fba}'].updates.push({
         version,
-        update_link: `https://github.com/parasharrajat/Expensify-CPlus/releases/download/${version}/expensify-contributor-plus.${version}.firefox.xpi.zip`,
+        update_link: `https://github.com/parasharrajat/Expensify-CPlus/releases/download/v${version}/expensify-contributor-plus.v${version}.firefox.xpi.zip`,
     });
 
     writeFileSync(path.resolve('./update_manifest.json'), JSON.stringify(json, null, 4), {encoding: 'utf-8'});
