@@ -43,3 +43,6 @@ Simply visit for issues/PRs at https://github.com/Expensify/App
 ## Help docs
 The build tool also defines a variable named `process.env.NODE_ENV` in your scripts.
 * [webextension-toolbox](https://github.com/HaNdTriX/webextension-toolbox)
+
+--- 
+ Expensify is a trademark of https://www.expensify.com. This tool does not belong to Expensify in anyway and purely made for personal use. 
