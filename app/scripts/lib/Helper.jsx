@@ -162,7 +162,7 @@ function enableIssuePRNotes() {
     const container = domHook(UI, 'expensiContributor-headerTitleRoot1');
     document.querySelector('#partial-discussion-header .gh-header-show .gh-header-actions').prepend(container);
     const stickycontainer2 = domHook(UI, 'expensiContributor-headerTitleRoot2');
-    document.querySelector('#partial-discussion-header .gh-header-sticky > div>div>div').append(stickycontainer2);
+    document.querySelector('#partial-discussion-header .gh-header-sticky > div>div').append(stickycontainer2);
     stickycontainer2.style.marginLeft = 'auto';
 }
 
