@@ -91,7 +91,8 @@ let GalleryHiddenItems = [];
 function organizeGallery(columnCount = 2, horizontal = false) {
     const PRbodyEls = document.querySelectorAll('.TimelineItem.js-command-palette-pull-body .edit-comment-hide .comment-body > * ');
     const screenshotHeadingIndex = Array.from(PRbodyEls).findIndex((el) => el.textContent.trim().toLowerCase().startsWith('screenshots')
-    || el.textContent.trim().toLowerCase().endsWith('screenshots'));
+    || el.textContent.trim().toLowerCase().endsWith('screenshots')
+    || el.textContent.trim().toLowerCase().startsWith('video'));
 
     if (screenshotHeadingIndex === -1) {
         return;
