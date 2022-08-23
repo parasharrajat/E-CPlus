@@ -17,7 +17,7 @@ import {
     CheckCircleFillIcon,
 } from '@primer/octicons-react';
 import WithStorage from './WithStorage';
-import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
+import {NOTE_TYPE, parseCommentURL, STORAGE_KEYS} from '../actions/common';
 import TitleLoader from './TitleLoader';
 import {removeProposalNote} from '../actions/issue';
 import Helper from '../lib/Helper';
@@ -37,6 +37,15 @@ class NotesPanel extends Component {
         super(props);
         this.state = {};
     }
+
+    getNoteTag = (noteType) => {
+        // eslint-disable-next-line default-case
+        switch (noteType) {
+            case NOTE_TYPE.ISSUE: return 'Main';
+            case NOTE_TYPE.PROPOSAL: return 'Proposal Note';
+            default: return 'Proposal Note';
+        }
+    };
 
     render() {
         console.debug(this.props);
@@ -87,10 +96,9 @@ class NotesPanel extends Component {
                                 sx={{width: 'auto', position: 'relative'}}
                                 href={note.link}
                             >
-                                <Text fontSize="small">
-                                    Note
-                                    {' #'}
-                                    {index + 1}
+                                <Text fontSize="small" sx={{float: 'right'}}>
+                                    {'# '}
+                                    {this.getNoteTag(note.noteType)}
                                 </Text>
                                 <ActionList.Description
                                     variant="block"
@@ -108,11 +116,15 @@ class NotesPanel extends Component {
                                 </CircleBadge>
                             </ActionList.LinkItem>
                             <Box px={2} flexDirection="row" display="flex">
-                                <Label>
-                                    <Avatar src={note.userAvatar} size={16} sx={{mr: 1}} />
-                                    {'  '}
-                                    {note.userHandle}
-                                </Label>
+                                {!!note.userHandle
+                                 && (
+                                     <Label>
+                                         <Avatar src={note.userAvatar} size={16} sx={{mr: 1}} />
+                                         {'  '}
+                                         {note.userHandle}
+                                     </Label>
+                                 )}
+
                                 <Label sx={{ml: 1}}>
                                     #
                                     {parseCommentURL(note.link).issueID}
