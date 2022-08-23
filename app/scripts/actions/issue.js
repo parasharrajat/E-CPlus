@@ -25,7 +25,7 @@ export function saveNote(commentID, issueID, link, note, userHandle, userAvatar,
     let id = `${STORAGE_KEYS.NOTE}${issueID}_issue`;
 
     if (commentID) {
-        id = `${STORAGE_KEYS.NOTE}${note.issue}_${STORAGE_KEYS.PROPOSAL_COMMENT}${note.commentID}`;
+        id = `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`;
     }
 
     return sendDataToBG({
