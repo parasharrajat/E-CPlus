@@ -167,6 +167,7 @@ function organizeGallery(columnCount = 2, horizontal = false) {
                             maxHeight={400}
                             display="flex"
                             alignContent="stretch"
+                            justifyContent="center"
                         />
                     </Box>
                 )))}
