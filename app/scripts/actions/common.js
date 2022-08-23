@@ -13,6 +13,7 @@ export const ISSUE_SUBSCRIPTION = {
 
 export const NOTE_TYPE = {
     PROPOSAL: 'proposal',
+    ISSUE: 'issue',
 };
 
 export const STORAGE_KEYS = {
@@ -24,11 +25,12 @@ export const STORAGE_KEYS = {
 
 export function parseCommentURL(url) {
     // eslint-disable-next-line no-useless-escape
-    const [, pageType, id, commentID] = /https\:\/\/github\.com\/[^\/]*\/[^\/]*\/(issues|pull)\/(\d*)\#issuecomment\-(\d*)/.exec(url);
+    const [, pageType, id, commentID] = /https\:\/\/github\.com\/[^\/]*\/[^\/]*\/(issues|pull)\/(\d*)(?:\#issuecomment\-(\d*))?/.exec(url);
     return {
         pageType,
-        issueID: pageType === 'issues' ? id : undefined,
-        prID: pageType === 'pull' ? id : undefined,
+
+        // Both PR and issue can referred as issueID,
+        issueID: id,
         commentID,
     };
 }

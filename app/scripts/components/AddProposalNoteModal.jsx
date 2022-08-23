@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Dialog, Box} from '@primer/react';
-import {addProposalNote} from '../actions/issue';
+import {saveNote} from '../actions/issue';
 import {parseCommentURL, STORAGE_KEYS} from '../actions/common';
 import WithStorage from './WithStorage';
 
@@ -23,7 +23,7 @@ class AddProposalNoteModal extends Component {
         }
         this.clearError();
         const {issueID, commentID} = parseCommentURL(this.props.proposalLink);
-        addProposalNote(commentID, issueID, this.props.proposalLink, this.state.note, this.props.userHandle, this.props.userAvatar);
+        saveNote(commentID, issueID, this.props.proposalLink, this.state.note, this.props.userHandle, this.props.userAvatar, this.props.noteType);
         this.props.onCancel();
     };
 
@@ -37,6 +37,7 @@ class AddProposalNoteModal extends Component {
     }
 
     render() {
+        console.debug(this.props);
         return (
             <Dialog
                 isOpen={this.props.isVisible}
@@ -76,7 +77,13 @@ export default WithStorage({
                 return;
             }
             const {issueID, commentID} = parseCommentURL(proposalLink);
-            return `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`;
+
+            console.debug(proposalLink);
+
+            if (commentID) {
+                return `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`;
+            }
+            return `${STORAGE_KEYS.NOTE}${issueID}_issue`;
         },
     },
 })(AddProposalNoteModal);
