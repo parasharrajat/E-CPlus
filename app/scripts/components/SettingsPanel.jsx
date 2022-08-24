@@ -38,7 +38,7 @@ const defaultProps = {
         checklistRules: [],
     },
 };
-class SeetingsPage extends Component {
+class SettingsPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -202,8 +202,26 @@ class SeetingsPage extends Component {
                                         // eslint-disable-next-line react/no-array-index-key
                                         key={`checklist_rule_${index}`}
                                         renderAnchor={({children, ...anchorProps}) => (
-                                            // eslint-disable-next-line react/jsx-props-no-spreading
-                                            <Button trailingIcon={TriangleDownIcon} {...anchorProps} sx={{m: 0}}>
+                                            <Button
+                                                trailingIcon={TriangleDownIcon}
+                                                // eslint-disable-next-line react/jsx-props-no-spreading
+                                                {...anchorProps}
+                                                sx={{
+                                                    m: 0,
+                                                    display: 'flex',
+                                                    flex: 1,
+                                                    ml: 2,
+                                                    minWidth: 0,
+                                                    '>[data-component="text"]': {
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        textAlign: 'left',
+                                                        flexWrap: 'wrap',
+                                                        maxWidth: '100%',
+                                                        whiteSpace: 'normal',
+                                                    },
+                                                }}
+                                            >
                                                 {children || 'Select Checklists'}
                                             </Button>
                                         )}
@@ -228,11 +246,11 @@ class SeetingsPage extends Component {
     }
 }
 
-SeetingsPage.propTypes = propTypes;
-SeetingsPage.defaultProps = defaultProps;
+SettingsPanel.propTypes = propTypes;
+SettingsPanel.defaultProps = defaultProps;
 
 export default WithStorage({
     settings: {
         key: STORAGE_KEYS.SETTINGS,
     },
-})(SeetingsPage);
+})(SettingsPanel);

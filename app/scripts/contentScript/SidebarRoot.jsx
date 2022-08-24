@@ -15,7 +15,7 @@ import NotesPanel from '../components/NotesPanel';
 import WithStorage from '../components/WithStorage';
 import {STORAGE_KEYS} from '../actions/common';
 import settings from '../actions/settings';
-import SettingsPage from '../components/SettingsPage';
+import SettingsPanel from '../components/SettingsPanel';
 import ChecklistPanel from '../components/ChecklistPanel';
 import Helper from '../lib/Helper';
 
@@ -81,7 +81,7 @@ class SidebarRoot extends Component {
             case 'notes':
                 return <NotesPanel onClose={this.closePanel} />;
             case 'settings':
-                return <SettingsPage onClose={this.closePanel} />;
+                return <SettingsPanel onClose={this.closePanel} />;
             case 'checklist':
                 return <ChecklistPanel onClose={this.closePanel} />;
             default:
