@@ -57,32 +57,34 @@ class ReviewerRoot extends Component {
 
             // Set the correct ref to modal
             proposalModalRef.current = {
-                show: (commentLink, userHandle, userAvatar) => {
+                show: (commentLink, userHandle, userAvatar, noteType) => {
                     this.setState({
                         addProposalNote: {
                             isVisible: true,
                             link: commentLink,
                             userHandle,
                             userAvatar,
+                            noteType,
                         },
                     });
                 },
                 hide: () => {
                     this.setState({
-                        addProposalNote: {isVisible: false, link: '', userHandle: null},
+                        addProposalNote: {isVisible: false, link: '', userHandle: null, noteType: ''},
                     });
                 },
             };
 
-            if(this.pageType === 'pr'){
+            if (this.pageType === 'pr') {
                 Helper.markPRChecklistStatus();
             }
-
+            if (this.pageType === 'pr' || this.pageType === 'issue') {
+                Helper.enableIssuePRNotes();
+            }
         } catch (e) {
             console.error(e);
         }
     }
-
 
     componentWillUnmount() {
         this.observer.disconnect();
@@ -236,6 +238,7 @@ class ReviewerRoot extends Component {
                     isVisible={this.state.addProposalNote?.isVisible}
                     userHandle={this.state.addProposalNote?.userHandle}
                     userAvatar={this.state.addProposalNote?.userAvatar}
+                    noteType={this.state.addProposalNote?.noteType}
                     onCancel={() => this.setState({addProposalNote: {isVisible: false, link: ''}})}
                 />
                 {isDev() && Helper.getPageType() === 'issue' && (

@@ -21,12 +21,18 @@ export function subscribeToIssue(id, options) {
     }).then();
 }
 
-export function addProposalNote(commentID, issueID, link, note, userHandle, userAvatar) {
+export function saveNote(commentID, issueID, link, note, userHandle, userAvatar, type = NOTE_TYPE.PROPOSAL) {
+    let id = `${STORAGE_KEYS.NOTE}${issueID}_issue`;
+
+    if (commentID) {
+        id = `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`;
+    }
+
     return sendDataToBG({
         op: 'add',
         data: {
-            noteType: NOTE_TYPE.PROPOSAL,
-            id: `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`,
+            noteType: type,
+            id,
             link,
             note,
             issue: issueID,
@@ -48,7 +54,11 @@ export async function getProposalComments() {
 }
 
 export function removeProposalNote(note) {
-    browser.storage.local.remove(`${STORAGE_KEYS.NOTE}${note.issue}_${STORAGE_KEYS.PROPOSAL_COMMENT}${note.commentID}`);
+    if (note.noteType === 'issue') {
+        browser.storage.local.remove(`${STORAGE_KEYS.NOTE}${note.issue}_issue`);
+    } else {
+        browser.storage.local.remove(`${STORAGE_KEYS.NOTE}${note.issue}_${STORAGE_KEYS.PROPOSAL_COMMENT}${note.commentID}`);
+    }
 }
 
 export function markProposalReviewed(commentID) {

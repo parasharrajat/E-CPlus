@@ -1,10 +1,12 @@
 import React from 'react';
-import {CheckIcon, XIcon} from '@primer/octicons-react';
+import {CheckIcon, PencilIcon, XIcon} from '@primer/octicons-react';
 import {
-    Box, Label, LabelGroup, StyledOcticon,
+    Box, Button, Label, LabelGroup, StyledOcticon,
 } from '@primer/react';
 import browser from 'webextension-polyfill';
 import domHook from './domHook';
+import {NOTE_TYPE} from '../actions/common';
+import proposalNoteModal from './proposalNoteModal';
 
 const urlCache = {
     get: (key) => {
@@ -42,6 +44,9 @@ function syncUrlCache({op, data}) {
 }
 
 async function getGhTitle(link) {
+    if (!link) {
+        return '';
+    }
     const cacheData = urlCache.get(link);
     if (cacheData) {
         return cacheData;
@@ -154,6 +159,16 @@ function getPageType() {
     }
 }
 
+function enableIssuePRNotes() {
+    const addProposal = () => proposalNoteModal.show(window.location.origin + window.location.pathname, '', '', NOTE_TYPE.ISSUE);
+    const UI = <Button sx={{ml: 2}} leadingIcon={PencilIcon} size="small" onClick={addProposal}>Note</Button>;
+    const container = domHook(UI, 'expensiContributor-headerTitleRoot1');
+    document.querySelector('#partial-discussion-header .gh-header-show .gh-header-actions').prepend(container);
+    const stickycontainer2 = domHook(UI, 'expensiContributor-headerTitleRoot2');
+    document.querySelector('#partial-discussion-header .gh-header-sticky > div>div').append(stickycontainer2);
+    stickycontainer2.style.marginLeft = 'auto';
+}
+
 export default {
     getGhTitle,
     isCommentProposal,
@@ -165,4 +180,5 @@ export default {
     isTurboEnabled,
     getPageType,
     syncUrlCache,
+    enableIssuePRNotes,
 };
