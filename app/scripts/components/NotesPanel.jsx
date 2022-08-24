@@ -22,6 +22,7 @@ import TitleLoader from './TitleLoader';
 import {removeProposalNote} from '../actions/issue';
 import Helper from '../lib/Helper';
 import EmptyContent from './EmptyContent';
+import NoteEnlargeView from './NoteEnlargeView';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
@@ -47,8 +48,16 @@ class NotesPanel extends Component {
         }
     };
 
+    // eslint-disable-next-line react/no-unused-class-component-methods
+    showEnlargeView = (note) => {
+        this.setState({isEnlargeViewVisible: true, noteUrl: note.link});
+    };
+
+    hideEnlargeView = () => {
+        this.setState({isEnlargeViewVisible: false, noteUrl: ''});
+    };
+
     render() {
-        console.debug(this.props);
         return (
             <>
                 <Header sx={{
@@ -133,6 +142,16 @@ class NotesPanel extends Component {
                             <Box py={2} px={3}>
                                 {note.note}
                             </Box>
+                            {/* Not yet ready to add this. */}
+                            {/* <IconButton
+                                icon={ScreenFullIcon}
+                                onClick={() => this.showEnlargeView(note)}
+                                sx={{
+                                    position: 'absolute',
+                                    bottom: 2,
+                                    right: 46,
+                                }}
+                            /> */}
                             <IconButton
                                 aria-label="remove"
                                 variant="danger"
@@ -147,6 +166,8 @@ class NotesPanel extends Component {
                         </Box>
                     ))}
                 </Box>
+
+                <NoteEnlargeView isVisible={this.state.isEnlargeViewVisible} noteUrl={this.state.noteUrl} onCancel={this.hideEnlargeView} />
             </>
         );
     }

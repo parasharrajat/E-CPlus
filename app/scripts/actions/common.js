@@ -24,6 +24,9 @@ export const STORAGE_KEYS = {
 };
 
 export function parseCommentURL(url) {
+    if (!url) {
+        return {};
+    }
     // eslint-disable-next-line no-useless-escape
     const [, pageType, id, commentID] = /https\:\/\/github\.com\/[^\/]*\/[^\/]*\/(issues|pull)\/(\d*)(?:\#issuecomment\-(\d*))?/.exec(url);
     return {

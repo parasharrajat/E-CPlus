@@ -78,8 +78,6 @@ export default WithStorage({
             }
             const {issueID, commentID} = parseCommentURL(proposalLink);
 
-            console.debug(proposalLink);
-
             if (commentID) {
                 return `${STORAGE_KEYS.NOTE}${issueID}_${STORAGE_KEYS.PROPOSAL_COMMENT}${commentID}`;
             }

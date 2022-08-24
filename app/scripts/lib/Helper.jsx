@@ -44,6 +44,9 @@ function syncUrlCache({op, data}) {
 }
 
 async function getGhTitle(link) {
+    if (!link) {
+        return '';
+    }
     const cacheData = urlCache.get(link);
     if (cacheData) {
         return cacheData;
