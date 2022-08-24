@@ -11,6 +11,7 @@ import {
     Avatar,
     FormControl,
     TextInputWithTokens,
+    TextInput,
 } from '@primer/react';
 import {
     XIcon,
@@ -83,12 +84,20 @@ class NotesPanel extends Component {
                             <FormControl.Label visuallyHidden>Tokens</FormControl.Label>
                             <TextInputWithTokens
                                 block
-                                onClick={() => this.setState({isSearchFocused: true})}
+                                onFocus={() => this.setState({isSearchFocused: true})}
                                 sx={{
                                     borderRadius: 3,
                                 }}
                                 onInput={(e) => this.setState({searchText: e.target.value})}
                                 leadingVisual={SearchIcon}
+                                trailingAction={this.state.searchText ? (
+                                    <TextInput.Action
+                                        onClick={() => this.setState({searchText: ''})}
+                                        icon={XIcon}
+                                        aria-label="Clear input"
+                                        sx={{color: 'fg.subtle'}}
+                                    />
+                                ) : undefined}
                                 tokens={this.state.tokens}
                                 onBlur={() => this.setState({isSearchFocused: false})}
                             />
