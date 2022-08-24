@@ -197,7 +197,7 @@ class SettingsPanel extends Component {
                                     py: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
                                 }}
                                 >
-                                    <FormControl.Label sx={{alignSelf: 'center'}}>{type.title}</FormControl.Label>
+                                    <FormControl.Label sx={{alignSelf: 'center', flexShrink: 0}}>{type.title}</FormControl.Label>
                                     <SelectPanel
                                         // eslint-disable-next-line react/no-array-index-key
                                         key={`checklist_rule_${index}`}
@@ -209,7 +209,6 @@ class SettingsPanel extends Component {
                                                 sx={{
                                                     m: 0,
                                                     display: 'flex',
-                                                    flex: 1,
                                                     ml: 2,
                                                     minWidth: 0,
                                                     '>[data-component="text"]': {
