@@ -1,23 +1,27 @@
-import React, {Component} from 'react';
+import {CopilotIcon} from '@primer/octicons-react';
 import {
+    ActionList,
+    ActionMenu,
     Avatar,
     Box,
+    CounterLabel,
     NavList,
     Overlay,
     Portal,
     Text,
     themeGet,
 } from '@primer/react';
-import {CopilotIcon} from '@primer/octicons-react';
 import {any} from 'prop-types';
+import React, {Component, createRef, Fragment} from 'react';
 import browser from 'webextension-polyfill';
-import NotesPanel from '../components/NotesPanel';
-import WithStorage from '../components/WithStorage';
 import {STORAGE_KEYS} from '../actions/common';
 import settings from '../actions/settings';
-import SettingsPanel from '../components/SettingsPanel';
 import ChecklistPanel from '../components/ChecklistPanel';
+import NotesPanel from '../components/NotesPanel';
+import SettingsPanel from '../components/SettingsPanel';
+import WithStorage from '../components/WithStorage';
 import Helper from '../lib/Helper';
+import Navigation from '../lib/Navigation';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
@@ -63,6 +67,13 @@ class SidebarRoot extends Component {
                 icon: CopilotIcon,
             });
         }
+
+        this.specialCPlusLinks = Helper.getCPlusSpecialLinks();
+    }
+
+    componentDidMount() {
+        this.attachSpecialCPlusMenus();
+        this.setActiveSpecialLinkTitle();
     }
 
     componentWillUnmount() {}
@@ -133,6 +144,67 @@ class SidebarRoot extends Component {
         this.setState({panel: '', panelVisible: false});
     };
 
+    showCommonSpecialMenu = (e, type, ref) => {
+        e.preventDefault();
+        this.setState({
+            isSpecialMenuOpen: true, menuType: type, menuAnchorRef: ref,
+        });
+    };
+
+    setActiveSpecialLinkTitle = () => {
+        const activeSpecialLink = this.specialCPlusLinks.find((linkDetails) => linkDetails.url.toLowerCase() === window.location.href.toLowerCase());
+        if (!activeSpecialLink) {
+            return;
+        }
+        const anchorId = activeSpecialLink.type === 'issue' ? '#issues-tab' : '#pull-requests-tab';
+        const anchor = document.querySelector(anchorId);
+        const contentEl = anchor.querySelector('[data-content]');
+        const counterEl = anchor.querySelector('.Counter');
+        if (contentEl) {
+            contentEl.textContent = activeSpecialLink.title;
+        }
+        if (counterEl) {
+            counterEl.hidden = true;
+        }
+    };
+
+    hideCommonSpecialMenu = () => {
+        this.setState({isSpecialMenuOpen: false, menuType: null, menuAnchorRef: null});
+    };
+
+    attachSpecialCPlusMenus = () => {
+        const anchors = ['#issues-tab', '#pull-requests-tab'];
+        anchors.forEach((anchorId) => {
+            const anchor = document.querySelector(anchorId);
+            const contentEl = anchor.querySelector('[data-content]');
+            const counterEl = anchor.querySelector('.Counter');
+            this.specialCPlusLinks.unshift({
+                title: contentEl.textContent,
+                type: anchor.id.includes('issue') ? 'issue' : 'pull',
+                url: anchor.getAttribute('href'),
+                counter: counterEl?.textContent,
+                isMain: true,
+            });
+            anchor.addEventListener('click', (e) => {
+                const ref = createRef();
+                ref.current = e.target;
+                this.showCommonSpecialMenu(e, e.target.id.includes('issue') ? 'issue' : 'pull', ref);
+            });
+        });
+    };
+
+    getSpecialLinkMainItemContent = (linkDetails) => {
+        if (!linkDetails) {
+            return null;
+        }
+        return (
+            <>
+                <Text fontWeight="bold">{linkDetails.title}</Text>
+                <CounterLabel sx={{ml: 2}}>{linkDetails.counter}</CounterLabel>
+            </>
+        );
+    };
+
     render() {
         if (this.globalNavs[1]) {
             this.globalNavs[1].icon = this.props.settings?.cPlusView
@@ -141,6 +213,25 @@ class SidebarRoot extends Component {
         }
         return (
             <>
+                <ActionMenu open={this.state.isSpecialMenuOpen} onOpenChange={this.hideCommonSpecialMenu} anchorRef={this.state.menuAnchorRef}>
+                    <ActionMenu.Overlay width="medium" sx={{mt: 2}}>
+                        <ActionList>
+                            {this.specialCPlusLinks
+                                .filter((linkdetails) => linkdetails.type === this.state.menuType)
+                                .map((linkdetails, index) => (
+                                    // eslint-disable-next-line react/no-array-index-key
+                                    <Fragment key={`anchor-${index}`}>
+                                        <ActionList.LinkItem href={linkdetails.url}>
+                                            {linkdetails.isMain
+                                                ? this.getSpecialLinkMainItemContent(linkdetails)
+                                                : linkdetails.title}
+                                        </ActionList.LinkItem>
+                                        {linkdetails.isMain && <ActionList.Divider />}
+                                    </Fragment>
+                                ))}
+                        </ActionList>
+                    </ActionMenu.Overlay>
+                </ActionMenu>
                 <Box
                     ref={(el) => (this.sidebarRef = el)}
                     className="sidebarRoot-menu"

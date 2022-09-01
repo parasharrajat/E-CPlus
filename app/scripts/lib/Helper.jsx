@@ -7,6 +7,7 @@ import browser from 'webextension-polyfill';
 import domHook from './domHook';
 import {NOTE_TYPE} from '../actions/common';
 import proposalNoteModal from './proposalNoteModal';
+import Session from './Session';
 
 const urlCache = {
     get: (key) => {
@@ -169,6 +170,47 @@ function enableIssuePRNotes() {
     stickycontainer2.style.marginLeft = 'auto';
 }
 
+function getCPlusSpecialLinks() {
+    const username = Session.getActiveUsername();
+    return [
+        {
+            title: 'Issues · WAITING PROPOSAL REVIEW',
+            type: 'issue',
+            url: `https://github.com/Expensify/App/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+assignee%3A${username}+NOT+%22%3Aribbon%3A+%3Aeyes%3A+%3Aribbon%3A%22in%3Acomments+NOT+%22HOLD+for+payment%22in%3Atitle+%22Current+assignee+%40${username}+is+eligible+for+the+Exported+assigner%22in%3Acomments+OR+%22Contributor-plus+team+member+for+initial+proposal+review+-+%40${username}+%28Exported%29%22in%3Acomments+`,
+        },
+        {
+            title: 'Issues · PROPOSAL APPROVED',
+            type: 'issue',
+            url: 'https://github.com/Expensify/App/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+%22%3Aribbon%3A+%3Aeyes%3A+%3Aribbon%3A%22+in%3Acomments+',
+        },
+        {
+            title: 'Issues · REPORTED BY ME',
+            type: 'issue',
+            url: `https://github.com/Expensify/App/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+%22Issue+reported+by%3A+%40${username}%22+in%3Abody`,
+        },
+        {
+            title: 'Issues incharge · DEPLOYED',
+            type: 'issue',
+            url: `https://github.com/Expensify/App/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+assignee%3A${username}+%22HOLD+for+payment%22in%3Atitle+`,
+        },
+        {
+            title: 'Pull requests · WAITING REVIEW',
+            type: 'pull',
+            url: 'https://github.com/Expensify/App/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc+user-review-requested%3A%40me',
+        },
+        {
+            title: 'Pull requests · APPROVED',
+            type: 'pull',
+            url: 'https://github.com/Expensify/App/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc+reviewed-by%3A%40me+%22%3Aribbon%3A+%3Aeyes%3A+%3Aribbon%3A%22+in%3Acomments+',
+        },
+        {
+            title: 'Pull requests · REVIEWED',
+            type: 'pull',
+            url: 'https://github.com/Expensify/App/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc+reviewed-by%3A%40me+NOT+%22%3Aribbon%3A+%3Aeyes%3A+%3Aribbon%3A%22+in%3Acomments+',
+        },
+    ];
+}
+
 export default {
     getGhTitle,
     isCommentProposal,
@@ -181,4 +223,5 @@ export default {
     getPageType,
     syncUrlCache,
     enableIssuePRNotes,
+    getCPlusSpecialLinks,
 };

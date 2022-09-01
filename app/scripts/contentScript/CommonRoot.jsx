@@ -27,19 +27,13 @@ const defaultProps = {
         checklistRules: [],
     },
 };
-class ReviewerRoot extends Component {
+class CommonRoot extends Component {
     constructor(props) {
         super(props);
         this.state = {
             options: {},
             selectedTab: 'main',
         };
-        this.tabs = [
-            {
-                title: 'Main',
-                key: 'main',
-            },
-        ];
         this.proposalCommentsTagged = [];
         this.findProposalCommentsAndFeatures = this.findProposalCommentsAndFeatures.bind(this);
         this.pageType = Helper.getPageType();
@@ -50,6 +44,10 @@ class ReviewerRoot extends Component {
             if (this.props.settings?.cPlusView) {
                 cPlusView.on();
             }
+            this.findProposalCommentsAndFeatures(
+                document.querySelectorAll('.js-discussion [id^=issuecomment-]'),
+            );
+            this.observeProposalComments();
 
             // Set the correct ref to modal
             proposalModalRef.current = {
@@ -66,9 +64,7 @@ class ReviewerRoot extends Component {
                 },
                 hide: () => {
                     this.setState({
-                        addProposalNote: {
-                            isVisible: false, link: '', userHandle: null, noteType: '',
-                        },
+                        addProposalNote: {isVisible: false, link: '', userHandle: null, noteType: ''},
                     });
                 },
             };
@@ -77,10 +73,6 @@ class ReviewerRoot extends Component {
                 Helper.markPRChecklistStatus();
             }
             if (this.pageType === 'pr' || this.pageType === 'issue') {
-                this.findProposalCommentsAndFeatures(
-                    document.querySelectorAll('.js-discussion [id^=issuecomment-]'),
-                );
-                this.observeProposalComments();
                 Helper.enableIssuePRNotes();
             }
         } catch (e) {
@@ -284,11 +276,11 @@ class ReviewerRoot extends Component {
     }
 }
 
-ReviewerRoot.propTypes = propTypes;
-ReviewerRoot.defaultProps = defaultProps;
+CommonRoot.propTypes = propTypes;
+CommonRoot.defaultProps = defaultProps;
 
 export default WithStorage({
     settings: {
         key: STORAGE_KEYS.SETTINGS,
     },
-})(ReviewerRoot);
+})(CommonRoot);

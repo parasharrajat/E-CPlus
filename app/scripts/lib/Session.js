@@ -1,12 +1,12 @@
 import Browser from 'webextension-polyfill';
 import {BROWSER_EXTENSION_ID} from '../actions/common';
 
-function getActionUsername() {
-    return document.querySelector('user-login');
+function getActiveUsername() {
+    return document.querySelector('meta[name="user-login"]')?.getAttribute('content');
 }
 
 function isUserSessionActive() {
-    return !!getActionUsername();
+    return !!getActiveUsername();
 }
 
 const syncHandlers = [];
@@ -32,7 +32,7 @@ function syncInit() {
 }
 
 export default {
-    getActionUsername,
+    getActiveUsername,
     isUserSessionActive,
     registerSyncHandler,
     syncInit,
