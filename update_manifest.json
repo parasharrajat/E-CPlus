@@ -9,6 +9,10 @@
                 {
                     "version": "1.5.0",
                     "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.5.0/expensifycplus-1.5.0.xpi"
+                },
+                {
+                    "version": "1.5.1",
+                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.5.1/expensifycplus-1.5.1.xpi"
                 }
             ]
         }
