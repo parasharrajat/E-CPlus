@@ -1,6 +1,6 @@
 {
 	"name": "expensify-contributor-plus",
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"description": "Browser extension for Expensify Contributor Plus. It comes handy in many ways to ease the life of C+.",
 	"scripts": {
 		"dev": "webextension-toolbox dev",

@@ -21,6 +21,10 @@
                 {
                     "version": "1.4.0",
                     "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.4.0/expensify-contributor-plus.v1.4.0.firefox.xpi.zip"
+                },
+                {
+                    "version": "1.5.0",
+                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.5.0/expensify-contributor-plus.v1.5.0.firefox.xpi.zip"
                 }
             ]
         }
