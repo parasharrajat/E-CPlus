@@ -9,12 +9,16 @@ import {
     Label,
     CircleBadge,
     Avatar,
+    FormControl,
+    TextInputWithTokens,
+    TextInput,
 } from '@primer/react';
 import {
     XIcon,
-    ArrowRightIcon,
     TrashIcon,
     CheckCircleFillIcon,
+    SearchIcon,
+    LinkExternalIcon,
 } from '@primer/octicons-react';
 import WithStorage from './WithStorage';
 import {NOTE_TYPE, parseCommentURL, STORAGE_KEYS} from '../actions/common';
@@ -36,8 +40,12 @@ const defaultProps = {
 class NotesPanel extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            tokens: [],
+        };
     }
+
+    searchNotes = (notes, input) => notes.filter((n) => new RegExp(input, 'gi').test(`${n.note} ${n.issue} ${n.userHandle} ${this.getNoteTag(n.noteType)}`));
 
     getNoteTag = (noteType) => {
         // eslint-disable-next-line default-case
@@ -57,18 +65,58 @@ class NotesPanel extends Component {
         this.setState({isEnlargeViewVisible: false, noteUrl: ''});
     };
 
+    sortNotes = (notes) => {
+        const pageType = Helper.getPageType();
+        const {issueID} = parseCommentURL(window.location.href);
+        if (pageType !== 'issue' && pageType !== 'pr') {
+            return notes;
+        }
+        return notes.sort((noteA) => {
+            // eslint-disable-next-line eqeqeq
+            if (noteA.issue == issueID) {
+                return -1;
+            }
+            return 0;
+        });
+    };
+
     render() {
+        const notes = this.sortNotes(this.searchNotes(this.props.notes, this.state.searchText));
         return (
             <>
                 <Header sx={{
                     px: 3, py: 2, bg: 'canvas.subtle', color: 'fg.default', fontWeight: 'bold',
                 }}
                 >
-                    <Header.Item full>
+                    <Header.Item full hidden={this.state.isSearchFocused}>
                         <Avatar square size={34} src={Helper.getAsset('images/notes.png')} />
                         <Text ml={2} fontSize={3}>
                             Notes
                         </Text>
+                    </Header.Item>
+                    <Header.Item full={this.state.isSearchFocused} sx={{transition: 'all 0.18s ease', ml: 'auto'}}>
+                        <FormControl sx={{width: '100%'}}>
+                            <FormControl.Label visuallyHidden>Tokens</FormControl.Label>
+                            <TextInputWithTokens
+                                block
+                                onFocus={() => this.setState({isSearchFocused: true})}
+                                sx={{
+                                    borderRadius: 3,
+                                }}
+                                onInput={(e) => this.setState({searchText: e.target.value})}
+                                leadingVisual={SearchIcon}
+                                trailingAction={this.state.searchText ? (
+                                    <TextInput.Action
+                                        onClick={() => this.setState({searchText: ''})}
+                                        icon={XIcon}
+                                        aria-label="Clear input"
+                                        sx={{color: 'fg.subtle'}}
+                                    />
+                                ) : undefined}
+                                tokens={this.state.tokens}
+                                onBlur={() => this.setState({isSearchFocused: false})}
+                            />
+                        </FormControl>
                     </Header.Item>
                     <IconButton
                         variant="default"
@@ -79,10 +127,10 @@ class NotesPanel extends Component {
                     />
                 </Header>
                 <Box p={3} overflowY="auto" overflowX="hidden" height="100%" flex={1}>
-                    {!this.props.notes.length && (
+                    {!notes.length && (
                         <EmptyContent title="Looks like you are all clear on your doubts." icon={CheckCircleFillIcon} />
                     )}
-                    {this.props.notes.map((note, index) => (
+                    {notes.map((note, index) => (
                         <Box
                             // eslint-disable-next-line react/no-array-index-key
                             key={`note_${index}`}
@@ -116,12 +164,12 @@ class NotesPanel extends Component {
                                     <TitleLoader link={note.link}>{(title) => title}</TitleLoader>
                                 </ActionList.Description>
                                 <CircleBadge
-                                    sx={{backgroundColor: 'palevioletred'}}
+                                    sx={{bg: 'white', boxShadow: 'shadow.large'}}
                                     variant="small"
                                     size={32}
                                     className="icon-go"
                                 >
-                                    <CircleBadge.Icon icon={ArrowRightIcon} />
+                                    <CircleBadge.Icon icon={LinkExternalIcon} />
                                 </CircleBadge>
                             </ActionList.LinkItem>
                             <Box px={2} flexDirection="row" display="flex">

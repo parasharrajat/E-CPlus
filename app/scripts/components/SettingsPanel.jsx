@@ -18,6 +18,7 @@ import {
     PlusIcon,
     FoldDownIcon,
     TriangleDownIcon,
+    DatabaseIcon,
 } from '@primer/octicons-react';
 import _ from 'underscore';
 import WithStorage from './WithStorage';
@@ -38,7 +39,7 @@ const defaultProps = {
         checklistRules: [],
     },
 };
-class SeetingsPage extends Component {
+class SettingsPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -138,7 +139,7 @@ class SeetingsPage extends Component {
                         onClick={this.props.onClose}
                     />
                 </Header>
-                <Box p={3} overflowY="auto" overflowX="hidden" height="100%" flex={1}>
+                <Box p={3} overflowY="auto" overflowX="hidden" height="100%" flexDirection="column" display="flex">
                     <Heading as="h5" sx={{fontSize: 2}}>
                         Checklist Settings
                     </Heading>
@@ -197,13 +198,30 @@ class SeetingsPage extends Component {
                                     py: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
                                 }}
                                 >
-                                    <FormControl.Label sx={{alignSelf: 'center'}}>{type.title}</FormControl.Label>
+                                    <FormControl.Label sx={{alignSelf: 'center', flexShrink: 0}}>{type.title}</FormControl.Label>
                                     <SelectPanel
                                         // eslint-disable-next-line react/no-array-index-key
                                         key={`checklist_rule_${index}`}
                                         renderAnchor={({children, ...anchorProps}) => (
-                                            // eslint-disable-next-line react/jsx-props-no-spreading
-                                            <Button trailingIcon={TriangleDownIcon} {...anchorProps} sx={{m: 0}}>
+                                            <Button
+                                                trailingIcon={TriangleDownIcon}
+                                                // eslint-disable-next-line react/jsx-props-no-spreading
+                                                {...anchorProps}
+                                                sx={{
+                                                    m: 0,
+                                                    display: 'flex',
+                                                    ml: 2,
+                                                    minWidth: 0,
+                                                    '>[data-component="text"]': {
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        textAlign: 'left',
+                                                        flexWrap: 'wrap',
+                                                        maxWidth: '100%',
+                                                        whiteSpace: 'normal',
+                                                    },
+                                                }}
+                                            >
                                                 {children || 'Select Checklists'}
                                             </Button>
                                         )}
@@ -222,17 +240,26 @@ class SeetingsPage extends Component {
                             ))}
                         </>
                     )}
+                    <Button
+                        variant="default"
+                        leadingIcon={DatabaseIcon}
+                        size="large"
+                        sx={{width: '100%', justifyContent: 'center', mt: 'auto'}}
+                        onClick={settings.exportData}
+                    >
+                        Export data
+                    </Button>
                 </Box>
             </>
         );
     }
 }
 
-SeetingsPage.propTypes = propTypes;
-SeetingsPage.defaultProps = defaultProps;
+SettingsPanel.propTypes = propTypes;
+SettingsPanel.defaultProps = defaultProps;
 
 export default WithStorage({
     settings: {
         key: STORAGE_KEYS.SETTINGS,
     },
-})(SeetingsPage);
+})(SettingsPanel);

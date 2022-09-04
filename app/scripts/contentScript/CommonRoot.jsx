@@ -27,19 +27,13 @@ const defaultProps = {
         checklistRules: [],
     },
 };
-class ReviewerRoot extends Component {
+class CommonRoot extends Component {
     constructor(props) {
         super(props);
         this.state = {
             options: {},
             selectedTab: 'main',
         };
-        this.tabs = [
-            {
-                title: 'Main',
-                key: 'main',
-            },
-        ];
         this.proposalCommentsTagged = [];
         this.findProposalCommentsAndFeatures = this.findProposalCommentsAndFeatures.bind(this);
         this.pageType = Helper.getPageType();
@@ -50,10 +44,14 @@ class ReviewerRoot extends Component {
             if (this.props.settings?.cPlusView) {
                 cPlusView.on();
             }
+            this.findProposalCommentsAndFeatures(
+                document.querySelectorAll('.js-discussion [id^=issuecomment-]'),
+            );
+            this.observeProposalComments();
 
             // Set the correct ref to modal
             proposalModalRef.current = {
-                show: (commentLink, userHandle, userAvatar, noteType, title) => {
+                show: (commentLink, userHandle, userAvatar, noteType) => {
                     this.setState({
                         addProposalNote: {
                             isVisible: true,
@@ -61,15 +59,12 @@ class ReviewerRoot extends Component {
                             userHandle,
                             userAvatar,
                             noteType,
-                            title,
                         },
                     });
                 },
                 hide: () => {
                     this.setState({
-                        addProposalNote: {
-                            isVisible: false, link: '', userHandle: null, noteType: '', title: undefined,
-                        },
+                        addProposalNote: {isVisible: false, link: '', userHandle: null, noteType: ''},
                     });
                 },
             };
@@ -78,10 +73,6 @@ class ReviewerRoot extends Component {
                 Helper.markPRChecklistStatus();
             }
             if (this.pageType === 'pr' || this.pageType === 'issue') {
-                this.findProposalCommentsAndFeatures(
-                    document.querySelectorAll('.js-discussion [id^=issuecomment-]'),
-                );
-                this.observeProposalComments();
                 Helper.enableIssuePRNotes();
             }
         } catch (e) {
@@ -237,7 +228,6 @@ class ReviewerRoot extends Component {
         return (
             <>
                 <AddNoteModal
-                    title={this.state.addProposalNote?.title}
                     proposalLink={this.state.addProposalNote?.link}
                     isVisible={this.state.addProposalNote?.isVisible}
                     userHandle={this.state.addProposalNote?.userHandle}
@@ -286,11 +276,11 @@ class ReviewerRoot extends Component {
     }
 }
 
-ReviewerRoot.propTypes = propTypes;
-ReviewerRoot.defaultProps = defaultProps;
+CommonRoot.propTypes = propTypes;
+CommonRoot.defaultProps = defaultProps;
 
 export default WithStorage({
     settings: {
         key: STORAGE_KEYS.SETTINGS,
     },
-})(ReviewerRoot);
+})(CommonRoot);

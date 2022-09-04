@@ -3,24 +3,12 @@
         "{2a855be6-939a-45da-9606-49b77fbb0fba}": {
             "updates": [
                 {
-                    "version": "1.3.0",
-                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.3.0/expensify-contributor-plus.v1.3.0.firefox.xpi.zip"
-                },
-                {
-                    "version": "1.3.1",
-                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.3.1/expensify-contributor-plus.v1.3.1.firefox.xpi.zip"
-                },
-                {
-                    "version": "1.3.2",
-                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.3.2/expensify-contributor-plus.v1.3.2.firefox.xpi.zip"
-                },
-                {
-                    "version": "1.3.3",
-                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.3.3/expensify-contributor-plus.v1.3.3.firefox.xpi.zip"
-                },
-                {
                     "version": "1.4.0",
-                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.4.0/expensify-contributor-plus.v1.4.0.firefox.xpi.zip"
+                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.4.0/expensifycplus-1.4.0.xpi"
+                },
+                {
+                    "version": "1.5.0",
+                    "update_link": "https://github.com/parasharrajat/Expensify-CPlus/releases/download/v1.5.0/expensifycplus-1.5.0.xpi"
                 }
             ]
         }

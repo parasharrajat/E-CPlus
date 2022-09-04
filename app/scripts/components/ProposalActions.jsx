@@ -19,7 +19,7 @@ class ProposalActions extends Component {
         const timeNode = issueNode.querySelector(`#${issueNode.id}-permalink` || '.timeline-comment-header-text .js-timestamp');
         const userHandleNode = issueNode.querySelector('.timeline-comment-header .author');
         const userAvatarNode = issueNode.parentNode.querySelector('img.avatar');
-        proposalNoteModal.show(timeNode.href, userHandleNode.innerText, userAvatarNode.src);
+        proposalNoteModal.show(timeNode.href, userHandleNode.innerText, userAvatarNode.src, 'Add Note for Proposal');
     };
 
     render() {
