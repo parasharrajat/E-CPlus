@@ -15,10 +15,10 @@ import {
 } from '@primer/react';
 import {
     XIcon,
-    ArrowRightIcon,
     TrashIcon,
     CheckCircleFillIcon,
     SearchIcon,
+    LinkExternalIcon,
 } from '@primer/octicons-react';
 import WithStorage from './WithStorage';
 import {NOTE_TYPE, parseCommentURL, STORAGE_KEYS} from '../actions/common';
@@ -164,12 +164,12 @@ class NotesPanel extends Component {
                                     <TitleLoader link={note.link}>{(title) => title}</TitleLoader>
                                 </ActionList.Description>
                                 <CircleBadge
-                                    sx={{backgroundColor: 'palevioletred'}}
+                                    sx={{bg: 'white', boxShadow: 'shadow.large'}}
                                     variant="small"
                                     size={32}
                                     className="icon-go"
                                 >
-                                    <CircleBadge.Icon icon={ArrowRightIcon} />
+                                    <CircleBadge.Icon icon={LinkExternalIcon} />
                                 </CircleBadge>
                             </ActionList.LinkItem>
                             <Box px={2} flexDirection="row" display="flex">
