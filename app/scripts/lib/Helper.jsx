@@ -161,7 +161,7 @@ function getPageType() {
 }
 
 function enableIssuePRNotes() {
-    const addProposal = () => proposalNoteModal.show(window.location.origin + window.location.pathname, '', '', NOTE_TYPE.ISSUE);
+    const addProposal = () => proposalNoteModal.show(window.location.origin + window.location.pathname, '', '', NOTE_TYPE.ISSUE, 'Add Note');
     const UI = <Button sx={{ml: 2}} leadingIcon={PencilIcon} size="small" onClick={addProposal}>Note</Button>;
     const container = domHook(UI, 'expensiContributor-headerTitleRoot1');
     document.querySelector('#partial-discussion-header .gh-header-show .gh-header-actions').prepend(container);

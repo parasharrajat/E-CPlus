@@ -3,7 +3,7 @@ import {
     Box, UnderlineNav, Text, Avatar,
 } from '@primer/react';
 import {any} from 'prop-types';
-import AddProposalNoteModal from '../components/AddProposalNoteModal';
+import AddNoteModal from '../components/AddNoteModal';
 import '../../styles/contentscript.css';
 import domHook from '../lib/domHook';
 import ProposalActions from '../components/ProposalActions';
@@ -53,7 +53,7 @@ class ReviewerRoot extends Component {
 
             // Set the correct ref to modal
             proposalModalRef.current = {
-                show: (commentLink, userHandle, userAvatar, noteType) => {
+                show: (commentLink, userHandle, userAvatar, noteType, title) => {
                     this.setState({
                         addProposalNote: {
                             isVisible: true,
@@ -61,13 +61,14 @@ class ReviewerRoot extends Component {
                             userHandle,
                             userAvatar,
                             noteType,
+                            title,
                         },
                     });
                 },
                 hide: () => {
                     this.setState({
                         addProposalNote: {
-                            isVisible: false, link: '', userHandle: null, noteType: '',
+                            isVisible: false, link: '', userHandle: null, noteType: '', title: undefined,
                         },
                     });
                 },
@@ -235,7 +236,8 @@ class ReviewerRoot extends Component {
     render() {
         return (
             <>
-                <AddProposalNoteModal
+                <AddNoteModal
+                    title={this.state.addProposalNote?.title}
                     proposalLink={this.state.addProposalNote?.link}
                     isVisible={this.state.addProposalNote?.isVisible}
                     userHandle={this.state.addProposalNote?.userHandle}

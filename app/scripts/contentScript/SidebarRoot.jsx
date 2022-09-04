@@ -22,6 +22,7 @@ import SettingsPanel from '../components/SettingsPanel';
 import WithStorage from '../components/WithStorage';
 import Helper from '../lib/Helper';
 import Navigation from '../lib/Navigation';
+import Session from '../lib/Session';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
@@ -72,6 +73,9 @@ class SidebarRoot extends Component {
     }
 
     componentDidMount() {
+        if (!Session.isUserSessionActive()) {
+            return;
+        }
         this.attachSpecialCPlusMenus();
         this.setActiveSpecialLinkTitle();
     }

@@ -3,7 +3,7 @@ import {
     Box, UnderlineNav, Text, Avatar,
 } from '@primer/react';
 import {any} from 'prop-types';
-import AddProposalNoteModal from '../components/AddProposalNoteModal';
+import AddNoteModal from '../components/AddNoteModal';
 import '../../styles/contentscript.css';
 import domHook from '../lib/domHook';
 import ProposalActions from '../components/ProposalActions';
@@ -227,7 +227,7 @@ class CommonRoot extends Component {
     render() {
         return (
             <>
-                <AddProposalNoteModal
+                <AddNoteModal
                     proposalLink={this.state.addProposalNote?.link}
                     isVisible={this.state.addProposalNote?.isVisible}
                     userHandle={this.state.addProposalNote?.userHandle}
