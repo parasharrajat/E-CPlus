@@ -67,6 +67,17 @@ function updateChecklistRules(rules) {
     });
 }
 
+function exportData() {
+    browser.storage.local.get().then((data) => {
+        const aEl = document.createElement('a');
+        aEl.setAttribute('download', 'export.json');
+        const dataURL = URL.createObjectURL(new Blob([JSON.stringify(data)]));
+        aEl.href = dataURL;
+        aEl.click();
+        URL.revokeObjectURL(dataURL);
+    });
+}
+
 export default {
-    toggleCPlusView, addChecklist, updateChecklist, removeChecklist, updateChecklistRules,
+    toggleCPlusView, addChecklist, updateChecklist, removeChecklist, updateChecklistRules, exportData,
 };

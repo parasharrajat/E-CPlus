@@ -79,7 +79,7 @@ class NotesPanel extends Component {
                             Notes
                         </Text>
                     </Header.Item>
-                    <Header.Item full={this.state.isSearchFocused}>
+                    <Header.Item full={this.state.isSearchFocused} sx={{transition: 'all 0.18s ease', ml: 'auto'}}>
                         <FormControl sx={{width: '100%'}}>
                             <FormControl.Label visuallyHidden>Tokens</FormControl.Label>
                             <TextInputWithTokens

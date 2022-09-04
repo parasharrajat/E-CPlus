@@ -18,6 +18,7 @@ import {
     PlusIcon,
     FoldDownIcon,
     TriangleDownIcon,
+    DatabaseIcon,
 } from '@primer/octicons-react';
 import _ from 'underscore';
 import WithStorage from './WithStorage';
@@ -138,7 +139,7 @@ class SettingsPanel extends Component {
                         onClick={this.props.onClose}
                     />
                 </Header>
-                <Box p={3} overflowY="auto" overflowX="hidden" height="100%" flex={1}>
+                <Box p={3} overflowY="auto" overflowX="hidden" height="100%" flexDirection="column" display="flex">
                     <Heading as="h5" sx={{fontSize: 2}}>
                         Checklist Settings
                     </Heading>
@@ -239,6 +240,15 @@ class SettingsPanel extends Component {
                             ))}
                         </>
                     )}
+                    <Button
+                        variant="default"
+                        leadingIcon={DatabaseIcon}
+                        size="large"
+                        sx={{width: '100%', justifyContent: 'center', mt: 'auto'}}
+                        onClick={settings.exportData}
+                    >
+                        Export data
+                    </Button>
                 </Box>
             </>
         );
