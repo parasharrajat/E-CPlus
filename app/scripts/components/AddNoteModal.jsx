@@ -63,7 +63,6 @@ class AddNoteModal extends Component {
     }
 
     render() {
-        console.debug(this.props);
         return (
             <Dialog
                 isOpen={this.props.isVisible}

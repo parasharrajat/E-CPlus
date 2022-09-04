@@ -65,8 +65,23 @@ class NotesPanel extends Component {
         this.setState({isEnlargeViewVisible: false, noteUrl: ''});
     };
 
+    sortNotes = (notes) => {
+        const pageType = Helper.getPageType();
+        const {issueID} = parseCommentURL(window.location.href);
+        if (pageType !== 'issue' && pageType !== 'pr') {
+            return notes;
+        }
+        return notes.sort((noteA) => {
+            // eslint-disable-next-line eqeqeq
+            if (noteA.issue == issueID) {
+                return -1;
+            }
+            return 0;
+        });
+    };
+
     render() {
-        const notes = this.searchNotes(this.props.notes, this.state.searchText);
+        const notes = this.sortNotes(this.searchNotes(this.props.notes, this.state.searchText));
         return (
             <>
                 <Header sx={{

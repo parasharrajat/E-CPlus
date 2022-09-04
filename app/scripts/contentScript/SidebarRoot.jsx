@@ -21,7 +21,6 @@ import NotesPanel from '../components/NotesPanel';
 import SettingsPanel from '../components/SettingsPanel';
 import WithStorage from '../components/WithStorage';
 import Helper from '../lib/Helper';
-import Navigation from '../lib/Navigation';
 import Session from '../lib/Session';
 
 const propTypes = {
